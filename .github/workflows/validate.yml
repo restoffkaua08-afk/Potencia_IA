@@ -1,0 +1,52 @@
+name: Validate repository
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            "README.md"
+            "CLAUDE.md"
+            "MANIFEST.json"
+            "bootstrap/BOOTSTRAP.md"
+            "bootstrap/AGENT-POLICY.md"
+            "prompts/01-iniciar-projeto.md"
+            "prompts/02-continuar-projeto.md"
+            "prompts/03-missao-autonoma.md"
+          )
+          for file in "${required[@]}"; do
+            test -f "$file"
+          done
+
+      - name: Validate manifest JSON
+        shell: bash
+        run: python -m json.tool MANIFEST.json >/dev/null
+
+      - name: Validate shell preflight syntax
+        shell: bash
+        run: bash -n bootstrap/preflight.sh
+
+      - name: Validate community files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f LICENSE
+          test -f .github/CONTRIBUTING.md
+          test -f .github/SECURITY.md
+          test -f .github/CODE_OF_CONDUCT.md
+          test -f .github/SUPPORT.md
