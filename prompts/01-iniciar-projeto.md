@@ -1,6 +1,24 @@
 # Prompt 01 — Bootstrap / Iniciar Potencia
 
+> **TRIGGER OPERACIONAL:** se o usuário entregar o link/pasta do Potencia_IA e disser **execute**, **executar**, **ativar**, **bootstrap** ou equivalente, este prompt deve ser executado automaticamente. Não responder pedindo a próxima missão.
+
 ## Missão
+
+Este prompt é um **runbook executável**, não uma explicação conceitual. O resultado esperado é uma instalação realmente operacional.
+
+### Regra do gatilho `execute`
+
+Ao detectar o gatilho, o Claude deve entrar em `BOOTSTRAPPING` e continuar pelas etapas abaixo sem esperar uma segunda ordem.
+
+**Não permitido antes do Final Gate:**
+- perguntar "qual é a missão?";
+- dizer que o Potencia foi ativado só porque os arquivos foram lidos;
+- encerrar após carregar skills;
+- iniciar o projeto do usuário;
+- retornar "estou pronto" como conclusão.
+
+**Permitido:** perguntar somente quando uma ação humana indispensável e não automatizável bloquear uma etapa. Mesmo nesse caso, continue todas as etapas independentes e registre o bloqueio.
+
 
 Este prompt é o **procedimento de ativação inicial** do Potencia IA.
 
@@ -11,6 +29,8 @@ Primeiro transforme o Potencia em uma infraestrutura operacional.
 ## Ordem obrigatória
 
 ### 1. Ler a própria infraestrutura
+
+**Não pare depois desta etapa. Ler é apenas o começo do bootstrap.**
 Leia:
 1. `CLAUDE.md`
 2. este prompt
@@ -127,6 +147,11 @@ Depois dos testes individuais, confirme:
 - delegação disponível quando configurada.
 
 ### 10. Fechamento
+
+Antes de fechar, faça uma checagem explícita de que nenhuma fase anterior foi apenas lida ou declarada sem execução real.
+
+Se o usuário entrou pelo gatilho `execute`, o bootstrap só pode terminar no **Final Gate**. Não existe retorno intermediário de "Potencia pronto".
+
 
 Só conclua quando a matriz estiver processada.
 
