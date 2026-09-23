@@ -2,32 +2,49 @@
 
 ## 0. O que você recebeu
 
-Esta pasta/repositório é uma **infraestrutura operacional reutilizável**, não uma documentação para ser apenas lida.
+Esta pasta/repositório é uma infraestrutura operacional reutilizável para Claude Code.
 
-Quando um usuário disser algo como **"execute o Potencia"**, **"ative o Potencia"**, **"configure essa pasta"** ou entregar este repositório/ZIP para você, sua primeira missão é **BOOTSTRAP DO POTENCIA**.
+Ela deve funcionar como um **produto self-bootstrapping**: o usuário pode entregar a pasta/ZIP, ou fornecer o link do repositório, e pedir para executar/ativar/configurar o Potencia.
 
-Você deve transformar a instalação recebida em um ambiente operacional, verificável e pronto para uso antes de iniciar o projeto do usuário.
+### Se o usuário forneceu somente um link
 
-**Leia este arquivo primeiro.** Depois siga obrigatoriamente:
-1. `prompts/01-iniciar-projeto.md`
-2. `prompts/02-continuar-projeto.md`
-3. `prompts/03-missao-autonoma.md`
-4. `MANIFEST.json`
-5. `bootstrap/BOOTSTRAP.md`
-6. os contratos em `projetos/`, `plugins/` e `skills/`.
+1. Obtenha o repositório no workspace usando Git.
+2. Entre na raiz correta do Potencia.
+3. Leia este CLAUDE.md antes de qualquer trabalho do projeto do usuário.
+4. Continue pelo bootstrap.
 
-Não trate nenhum desses arquivos como documentação opcional.
+### Se o usuário forneceu um ZIP/pasta
+
+1. Localize o pacote.
+2. Extraia/abra a raiz correta.
+3. Leia este CLAUDE.md.
+4. Continue pelo bootstrap.
+
+Não comece o projeto do usuário antes de concluir a ativação do Potencia.
 
 ---
 
-## 1. Resultado esperado do primeiro uso
+## 1. Entrada obrigatória
 
-O primeiro uso tem duas fases diferentes:
+**Leia este arquivo primeiro.** Depois siga obrigatoriamente:
+1. prompts/01-iniciar-projeto.md
+2. prompts/02-continuar-projeto.md
+3. prompts/03-missao-autonoma.md
+4. MANIFEST.json
+5. bootstrap/BOOTSTRAP.md
+6. os contratos em projetos/, plugins/ e skills/.
+
+Não trate esses arquivos como documentação opcional.
+
+---
+
+## 2. Primeira missão: BOOTSTRAP DO POTENCIA
+
+Quando o usuário pedir para executar, ativar, instalar ou configurar o Potencia, sua primeira missão é transformar a instalação recebida em um ambiente operacional, verificável e pronto para uso.
 
 ### Fase A — Bootstrap
-Instalar, configurar, ativar e verificar tudo que for aplicável ao ambiente.
 
-Isso inclui, quando suportado:
+Instale, configure, ative e verifique tudo que for aplicável:
 - projetos/agentes externos;
 - plugins;
 - skills;
@@ -36,13 +53,14 @@ Isso inclui, quando suportado:
 - otimização de contexto/tokens;
 - roteamento;
 - observabilidade;
-- ferramentas de conhecimento do código;
-- mecanismos de delegação e harness.
+- conhecimento estrutural do código;
+- delegação;
+- harness/orquestração.
 
 Também deve:
 - detectar SO, shell, Claude Code, Git, Python, Node e demais pré-requisitos;
 - estudar os contratos locais antes de instalar;
-- usar as fontes oficiais definidas em `projetos/` e `plugins/`;
+- usar as fontes oficiais definidas nos contratos;
 - registrar estado e evidências;
 - testar cada componente;
 - corrigir falhas de instalação quando possível;
@@ -51,40 +69,40 @@ Também deve:
 - nunca alegar sucesso sem evidência.
 
 ### Fase B — Armamento operacional
-Somente depois de o bootstrap estar verificado:
+
+Somente depois do bootstrap verificado:
 - carregar/ativar as skills aplicáveis;
-- conhecer as regras dos projetos/agentes;
+- conhecer as regras dos agentes/projetos;
 - preparar o loop obrigatório;
-- deixar as ferramentas disponíveis para o projeto do usuário;
-- confirmar quais componentes estão realmente utilizáveis.
+- deixar as ferramentas disponíveis para o projeto do usuário.
 
 **Skills não substituem agentes. Agentes não substituem skills. Plugins não substituem nenhum dos dois.**
 
 ---
 
-## 2. Regra de ativação obrigatória
+## 3. Regra de ativação obrigatória
 
 Depois do bootstrap, os componentes do Potencia tornam-se parte da infraestrutura padrão do trabalho.
 
-Para cada projeto do usuário, você deve:
-- usar as skills do Potencia quando aplicáveis;
-- ativar os agentes/projetos configurados quando apropriados;
-- usar plugins configurados quando disponíveis;
-- usar Graphify para compreensão estrutural de código quando aplicável;
-- usar RTK/Headroom quando disponíveis e benéficos, sem empilhar otimizações que degradem qualidade;
-- usar harness/orquestração para tarefas longas e paralelizáveis;
-- usar revisão independente quando disponível;
-- usar Security Hooks como camada de proteção, sem desativá-los para contornar uma falha;
-- usar Emil, Impeccable e Taste em trabalho de interface quando aplicáveis;
-- usar Task Observer somente dentro do seu laboratório permitido.
+Para cada projeto do usuário, use:
+- skills do Potencia quando aplicáveis;
+- agentes/projetos configurados quando apropriados;
+- plugins configurados quando disponíveis;
+- Graphify para compreensão estrutural quando aplicável;
+- RTK/Headroom quando disponíveis e benéficos;
+- harness/orquestração em tarefas longas e paralelizáveis;
+- revisão independente quando disponível;
+- Security Hooks como camada de proteção;
+- Emil, Impeccable e Taste em trabalho de interface quando aplicáveis;
+- Task Observer somente dentro do laboratório permitido.
 
-Não faça uma execução monolítica por conveniência quando existir um componente configurado e adequado.
+Não faça execução monolítica por conveniência quando existir componente configurado e adequado.
 
-Se um componente não puder ser usado, registre **por quê** e qual alternativa verificável foi usada.
+Se um componente não puder ser usado, registre por quê e qual alternativa verificável foi usada.
 
 ---
 
-## 3. Ciclo obrigatório de desenvolvimento
+## 4. Ciclo obrigatório de desenvolvimento
 
 Para qualquer trabalho não trivial:
 
@@ -108,7 +126,7 @@ Build verde, HTTP 200, exit code 0 ou "parece funcionar" não são prova suficie
 
 ---
 
-## 4. Gates
+## 5. Gates
 
 ### Discovery
 Defina problema, usuários, objetivo, escopo, entradas/saídas, restrições, requisitos, preferências, proibições, casos-limite, integrações, segurança, performance e sucesso.
@@ -119,7 +137,7 @@ Documente decisões relevantes. Cada documento necessário deve ser classificado
 - NOT REQUIRED
 - NOT APPLICABLE
 
-Se faltar uma decisão essencial, pare e pergunte. Não invente requisito importante.
+Se faltar decisão essencial, pare e pergunte. Não invente requisito importante.
 
 ### Planning
 Crie fases, tarefas, dependências, paralelismo, responsáveis/agentes, arquivos, critérios de aceitação, testes, checkpoints e riscos.
@@ -128,37 +146,17 @@ Crie fases, tarefas, dependências, paralelismo, responsáveis/agentes, arquivos
 Prove o resultado contra os critérios reais, incluindo testes de integração quando aplicáveis.
 
 ### Adversarial Review
-Depois da implementação, procure independentemente:
-- bugs;
-- requisitos esquecidos;
-- falhas de arquitetura;
-- segurança;
-- dependências;
-- performance;
-- manutenção;
-- acessibilidade;
-- inconsistências entre documentação e código.
+Depois da implementação, procure independentemente bugs, requisitos esquecidos, arquitetura, segurança, dependências, performance, manutenção, acessibilidade e divergências entre documentação e código.
 
 Corrija achados e verifique novamente.
 
 ---
 
-## 5. Autonomia
+## 6. Autonomia
 
 Trabalhe continuamente quando houver informação suficiente.
 
-Pode:
-- pesquisar;
-- ler;
-- instalar;
-- configurar;
-- delegar;
-- implementar;
-- testar;
-- revisar;
-- corrigir;
-- repetir;
-- documentar estado.
+Pode pesquisar, ler, instalar, configurar, delegar, implementar, testar, revisar, corrigir, repetir e documentar.
 
 Pergunte somente quando:
 - faltar decisão essencial;
@@ -170,16 +168,9 @@ Não transforme limitações normais em perguntas desnecessárias.
 
 ---
 
-## 6. Verdade operacional
+## 7. Verdade operacional
 
-Nunca simule:
-- instalação;
-- ativação;
-- leitura;
-- teste;
-- delegação;
-- revisão;
-- aprovação.
+Nunca simule instalação, ativação, leitura, teste, delegação, revisão ou aprovação.
 
 Se não foi executado, não diga que foi.
 
@@ -187,13 +178,13 @@ Se uma ferramenta mudou desde a documentação local, consulte a fonte oficial a
 
 ---
 
-## 7. Estado do Potencia
+## 8. Estado do Potencia
 
-Mantenha um estado local de bootstrap, preferencialmente em:
+Mantenha estado local em:
 
-`.potencia/runtime-state.json`
+.potencia/runtime-state.json
 
-O estado deve registrar pelo menos:
+O estado registra:
 - versão do Potencia;
 - data/hora;
 - sistema operacional;
@@ -203,7 +194,7 @@ O estado deve registrar pelo menos:
 - componentes ativos;
 - componentes verificados;
 - componentes bloqueados;
-- comandos/testes executados;
+- comandos/testes;
 - evidências;
 - limitações;
 - última verificação.
@@ -212,9 +203,9 @@ Nunca coloque tokens, API keys, senhas ou credenciais nesse arquivo ou no reposi
 
 ---
 
-## 8. Conclusão do bootstrap
+## 9. Conclusão do bootstrap
 
-Você só pode considerar o Potencia operacional quando:
+Só considere o Potencia operacional quando:
 1. todos os componentes aplicáveis foram processados;
 2. instalações necessárias foram feitas;
 3. ativações/configurações aplicáveis foram feitas;
@@ -224,13 +215,13 @@ Você só pode considerar o Potencia operacional quando:
 7. otimizações de contexto/tokens aplicáveis foram verificadas;
 8. testes de saúde passaram ou cada bloqueio foi explicitamente classificado;
 9. o estado foi registrado;
-10. não existe uma pendência essencial silenciosa.
+10. não existe pendência essencial silenciosa.
 
-Se alguma dependência exigir ação humana, explique a ação exata. **Não diga que está ativado enquanto ela faltar.**
+Se alguma dependência exigir ação humana, explique a ação exata. Não diga que está ativado enquanto ela faltar.
 
 ### Mensagem final de sucesso do bootstrap
 
-Quando **e somente quando** o bootstrap inteiro estiver realmente concluído e verificado, a resposta ao usuário deve ser exatamente:
+Quando e somente quando o bootstrap inteiro estiver concluído e verificado, a resposta ao usuário deve ser exatamente:
 
 **Claude code com Potencia Ativado!**
 
@@ -240,7 +231,7 @@ Se o bootstrap não puder ser concluído, não use essa frase. Informe objetivam
 
 ---
 
-## 9. Skills, projetos e plugins configurados
+## 10. Componentes configurados
 
 ### Projetos/agentes
 1. Superpowers
@@ -269,29 +260,30 @@ Se o bootstrap não puder ser concluído, não use essa frase. Informe objetivam
 10. Project Seal
 
 ### Task Observer
-`skills/` é produção e deve ser protegida.
 
-`task-observer-workspace/` é laboratório experimental.
+skills/ é produção e deve ser protegida.
 
-O observer pode experimentar dentro do laboratório, mas não pode autonomamente alterar:
-- `CLAUDE.md`
-- `prompts/`
-- `plugins/`
-- `projetos/`
+task-observer-workspace/ é laboratório experimental.
+
+O Observer pode experimentar dentro do laboratório, mas não pode autonomamente alterar:
+- CLAUDE.md
+- prompts/
+- plugins/
+- projetos/
 
 ---
 
-## 10. Regras de limpeza e selo
+## 11. Limpeza e selo
 
-`09-project-cleanup` só pode executar a limpeza destrutiva do projeto depois da validação do usuário.
+09-project-cleanup só pode executar a limpeza destrutiva do projeto depois da validação do usuário.
 
-`10-project-seal` executa depois da limpeza e da validação final.
+10-project-seal executa depois da limpeza e da validação final.
 
 Isso não impede o bootstrap de limpar seus próprios temporários ou corrigir uma instalação quebrada.
 
 ---
 
-## 11. Regra de conclusão de projetos
+## 12. Regra de conclusão de projetos
 
 "Terminado" significa:
 - critérios de aceitação atendidos;
@@ -301,4 +293,3 @@ Isso não impede o bootstrap de limpar seus próprios temporários ou corrigir u
 - estado final conhecido;
 - documentação coerente;
 - nenhuma falsa alegação de sucesso.
-
