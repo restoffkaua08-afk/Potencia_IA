@@ -22,6 +22,26 @@ Quando houver informação suficiente:
 
 Não pare por motivos cosméticos.
 
+## Política mínima de agentes
+
+Em toda unidade de **DEVELOPMENT**:
+- mantenha no mínimo **2 agentes auxiliares ativos**;
+- um deve executar como especialista;
+- outro deve revisar/verificar independentemente.
+
+Para tarefas com múltiplas superfícies de risco, aumente a equipe com especialistas adequados.
+
+Não conte a existência de uma skill como um agente.
+Não conte o supervisor/orquestrador como substituto dos dois agentes auxiliares.
+Não conte um agente que apenas foi planejado, mas nunca iniciado.
+Agente "ativo" significa que recebeu trabalho/escopo e está disponível para produzir evidência na unidade atual.
+
+## Superpowers
+
+Superpowers deve estar ativo e ser usado quando a unidade de desenvolvimento for compatível com sua metodologia.
+
+Se estiver indisponível, registre BLOCKED e não apresente a unidade como conforme.
+
 ## Estado obrigatório
 
 Mantenha:
@@ -31,12 +51,23 @@ Mantenha:
 - tarefas;
 - dependências;
 - agentes ativos;
+- papéis dos agentes;
 - decisões;
 - bloqueios;
 - evidências;
 - critérios;
 - itens ainda não provados;
 - próximo passo.
+
+Quando suportado, registre também:
+- required_agents;
+- active_agents;
+- execution_agent;
+- reviewer_agent;
+- specialist_agents;
+- verification_status;
+- findings;
+- corrections.
 
 ## Falhas
 
@@ -59,6 +90,8 @@ Ao receber resultado:
 - valide;
 - revise quando apropriado.
 
+O agente executor nunca deve ser a única fonte de aprovação.
+
 ## Proteção contra loops
 
 Evite:
@@ -80,7 +113,8 @@ Não declare done quando houver:
 - review pendente;
 - erro conhecido não tratado;
 - integração não testada;
-- documentação contraditória.
+- documentação contraditória;
+- política mínima de agentes não satisfeita.
 
 ## Ações de alto risco
 
@@ -101,4 +135,3 @@ No final, informe:
 - limitações;
 - problemas conhecidos;
 - estado final.
-
