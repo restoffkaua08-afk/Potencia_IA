@@ -1,19 +1,16 @@
 <div align="center">
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=220&color=0:071A2B,45:004B76,100:00A7E1&text=POTENCIA%20IA&fontColor=FFFFFF&fontSize=48&fontAlignY=38&animation=fadeIn&desc=INFRAESTRUTURA%20MULTIAGENTE%20PARA%20CLAUDE%20CODE&descAlignY=59&descSize=15" alt="Potencia IA"/>
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=220&color=0:071A2B,45:004B76,100:00A7E1&text=POTENCIA%20IA&fontColor=FFFFFF&fontSize=48&fontAlignY=38&animation=fadeIn&desc=UMA%20EQUIPE%20DE%20IA%20PARA%20SEU%20PROJETO&descAlignY=59&descSize=15" alt="Potencia IA"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=19&duration=2800&pause=900&color=00A7E1&center=true&vCenter=true&width=900&lines=Bootstrap+autom%C3%A1tico;Multiagentes+e+especialistas;Planejamento+%E2%80%A2+Execu%C3%A7%C3%A3o+%E2%80%A2+Verifica%C3%A7%C3%A3o;Revis%C3%A3o+adversarial+e+corre%C3%A7%C3%A3o;Contexto%2C+tokens+e+harnesses" alt="Potencia IA"/>
-
-<br>
-
-### Infraestrutura operacional reutilizável para desenvolvimento estruturado, multiagente e verificável com Claude Code.
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=19&duration=2800&pause=900&color=00A7E1&center=true&vCenter=true&width=900&lines=Transforme+um+agente+em+uma+equipe;Harness+multiagente;Especialistas+trabalhando+juntos;Planejamento+%E2%80%A2+Desenvolvimento+%E2%80%A2+Testes+%E2%80%A2+Revis%C3%A3o;Mais+controle%2C+qualidade+e+confiabilidade" alt="Potencia IA"/>
 
 <br>
+
+### Uma infraestrutura para transformar agentes de IA em equipes especializadas de desenvolvimento.
 
 ![Status](https://img.shields.io/badge/STATUS-SELF%20BOOTSTRAPPING-00A7E1?style=for-the-badge&labelColor=071A2B)
-![Architecture](https://img.shields.io/badge/ARQUITETURA-MULTIAGENTE-19B394?style=for-the-badge&labelColor=071A2B)
-![Runtime](https://img.shields.io/badge/RUNTIME-CLAUDE%20CODE-7C3AED?style=for-the-badge&labelColor=071A2B)
-![Version](https://img.shields.io/badge/VERS%C3%83O-0.2.0-F7941D?style=for-the-badge&labelColor=071A2B)
+![Método](https://img.shields.io/badge/M%C3%89TODO-MULTIAGENTE-19B394?style=for-the-badge&labelColor=071A2B)
+![Foco](https://img.shields.io/badge/FOCO-CLAUDE%20CODE-7C3AED?style=for-the-badge&labelColor=071A2B)
 
 <br>
 
@@ -23,482 +20,206 @@
 
 <br>
 
-# `> PROJECT.OVERVIEW`
+# `> O.QUE.É.O.POTENCIA`
 
-## Uma camada operacional para desenvolvimento com agentes
+O **Potencia IA** é uma infraestrutura de desenvolvimento criada para fazer seu agente de IA trabalhar de uma forma mais próxima de uma **equipe de engenharia especializada**.
 
-O **Potencia IA** é uma infraestrutura self-bootstrapping para **Claude Code**.
+Em vez de um único agente tentar entender, desenvolver, testar, revisar e validar tudo sozinho, o Potencia organiza diferentes **agentes, projetos, harnesses, skills e ferramentas** para trabalharem juntos durante o desenvolvimento.
 
-A proposta é entregar ao agente uma estrutura que ele possa estudar, instalar, ativar, verificar e utilizar como padrão durante o desenvolvimento de projetos.
+> **A ideia é simples: transformar um agente que trabalha sozinho em uma equipe de agentes trabalhando de forma coordenada.**
 
-O fluxo começa com uma pasta/ZIP ou com o link deste repositório. O Claude Code lê o contrato do Potencia, detecta o ambiente, processa o bootstrap, instala e configura os componentes aplicáveis, verifica cada etapa e registra o estado operacional.
-
-Somente depois de concluir o bootstrap, o Potencia considera o ambiente pronto.
-
-> **Objetivo central:** reduzir execução monolítica, aumentar a cobertura de especialistas, tornar revisão e verificação obrigatórias e permitir missões longas com estado, delegação e evidência.
+O Potencia foi pensado principalmente para **Claude Code**, mas sua proposta é baseada em práticas e componentes que podem complementar outros ambientes de agentes.
 
 <br>
 
-# `> HOW.IT.WORKS`
+# `> POR.QUE.USAR`
 
-\`\`\`text
-USUÁRIO
-   │
-   │  "Execute / Ative o Potencia"
-   ▼
-CLAUDE CODE
-   │
-   ├── lê CLAUDE.md
-   ├── lê prompts + manifest
-   ├── detecta ambiente
-   ├── estuda contratos
-   ▼
-BOOTSTRAP
-   │
-   ├── instala
-   ├── configura
-   ├── ativa
-   ├── verifica
-   └── registra evidências
-   ▼
-POTENCIA ATIVO
-   │
-   ├── Superpowers
-   ├── agentes especialistas
-   ├── harness/orquestração
-   ├── Graphify
-   ├── RTK / Headroom
-   ├── Security Hooks
-   └── skills de engenharia
-   ▼
-PROJETO DO USUÁRIO
-   ▼
-PLAN → ASSIGN → EXECUTE → OBSERVE
-   ▼
-TEST → INDEPENDENT REVIEW → VERIFY
-   ├── PROVEN → ACCEPT
-   └── FAILED → CORRECT → VERIFY AGAIN
-\`\`\`
+Desenvolver um projeto não significa apenas gerar código.
+
+É necessário entender o problema, planejar, tomar decisões, implementar, testar, encontrar falhas, revisar o resultado e verificar se aquilo que foi produzido realmente atende ao objetivo.
+
+Um único agente pode fazer tudo isso, mas ele também pode deixar passar problemas, assumir requisitos, perder contexto ou considerar uma tarefa concluída cedo demais.
+
+O Potencia cria uma estrutura para reduzir esse comportamento.
+
+Ele incentiva o agente a:
+
+- entender antes de executar;
+- dividir problemas complexos;
+- delegar trabalho;
+- utilizar especialistas;
+- trabalhar em paralelo quando fizer sentido;
+- testar o que foi produzido;
+- revisar o próprio resultado através de outro agente;
+- corrigir problemas encontrados;
+- verificar novamente;
+- manter continuidade em tarefas longas.
+
+**O objetivo não é simplesmente adicionar mais ferramentas. É melhorar a maneira como a IA trabalha.**
 
 <br>
 
-# `> AGENT.POLICY`
+# `> O.MÉTODO.HARNESS`
 
-## Multiagentes como regra operacional
+Um dos conceitos centrais do Potencia é o **Harness**.
 
-Para cada unidade classificada como **DEVELOPMENT**:
+Harness é uma forma de organizar o trabalho de agentes de IA para permitir que **múltiplos agentes atuem como uma equipe coordenada**.
 
-- **mínimo de 2 agentes auxiliares ativos**;
-- **1 Executor/Especialista**;
-- **1 Reviewer/Verifier independente**;
-- Superpowers ativo quando aplicável;
-- especialistas adicionais conforme a superfície da tarefa;
-- revisão independente antes de aceitar o resultado.
+Imagine que o seu agente principal tenha uma equipe disponível:
 
-Exemplo:
+**Executor → Especialista → Tester → Reviewer → Verifier**
 
-\`\`\`text
-SUPERVISOR
-    │
-    ├── EXECUTOR / ESPECIALISTA
-    ├── SECURITY SPECIALIST
-    ├── QA / TESTING
-    └── REVIEWER / VERIFIER
-\`\`\`
+Uma tarefa pode ser dividida entre agentes com responsabilidades diferentes. Um agente desenvolve, outro analisa, outro testa e outro procura problemas que passaram despercebidos.
 
-Agente apenas mencionado no plano não conta como agente ativo.
+Quando necessário, o resultado volta para correção e passa por uma nova verificação.
 
-Consulte [bootstrap/AGENT-POLICY.md](./bootstrap/AGENT-POLICY.md) para a política completa.
+Isso cria um ciclo muito mais próximo de uma equipe real de engenharia:
+
+**planejar → delegar → desenvolver → testar → revisar → corrigir → verificar**
+
+> **Harness não significa apenas ter vários agentes. Significa dar aos agentes uma forma organizada de trabalhar juntos.**
 
 <br>
 
-# `> CORE.COMPONENTS`
+# `> UMA.EQUIPE.DENTRO.DA.SUA.IA`
 
-## Projetos e agentes
+O Potencia estabelece, para unidades de desenvolvimento, **no mínimo dois agentes auxiliares ativos**:
 
-| Componente | Papel |
+- **Executor / Especialista** — responsável pela execução da unidade;
+- **Reviewer / Verifier** — responsável por revisar e verificar o resultado de forma independente.
+
+E, conforme o projeto exigir, podem entrar especialistas adicionais:
+
+| Área | Especialista |
 |---|---|
-| **Superpowers** | Metodologia estruturada de desenvolvimento |
-| **Graphify** | Conhecimento e análise estrutural do código |
-| **RTK** | Redução de saída redundante e economia de contexto |
-| **VV Claude Harness** | Harness e continuidade |
-| **Security Hooks** | Proteção de operações |
-| **Superharness** | Coordenação e execução |
-| **Codex Subagents** | Delegação complementar |
+| Frontend | UI / UX |
+| Backend | APIs / serviços |
+| Banco de dados | Dados |
+| Segurança | Security |
+| Testes | QA |
+| Arquitetura | Architecture |
+| Performance | Performance |
+| IA | AI / Prompt |
+| Acessibilidade | Accessibility |
+| Documentação | Documentation |
 
-## Infraestrutura e plugins
-
-| Componente | Papel |
-|---|---|
-| **OmniRoute** | Roteamento de modelos/provedores |
-| **Headroom** | Engenharia de contexto |
-| **Task Observer** | Observação e evolução controlada |
-
-## Skills
-
-1. Problem Discovery
-2. Specification + Architecture Gate
-3. Execution Planner
-4. Verification
-5. Adversarial Engineering Review
-6. Emil / Design Engineering
-7. Impeccable
-8. Taste
-9. Project Cleanup
-10. Project Seal
+Assim, um projeto complexo não precisa depender de uma única perspectiva.
 
 <br>
 
-# `> ENGINEERING.LOOP`
+# `> O.QUE.COMPÕE.O.POTENCIA`
 
-## Ciclo do Potencia
+O Potencia combina componentes com funções diferentes:
 
-\`\`\`text
-ENTENDER → DESCOBRIR → ESPECIFICAR → ARQUITETAR
-                    ↓
-PLANEJAR → DELEGAR → EXECUTAR → OBSERVAR
-                    ↓
-TESTAR → VERIFICAR → REVISAR → CORRIGIR
-                    ↓
-VERIFICAR NOVAMENTE → VALIDAR → LIMPAR → SELAR
-\`\`\`
+### 🧠 Agentes e Harness
+**Superpowers, Superharness, VV Claude Harness e Codex Subagents** ajudam a estruturar desenvolvimento, delegação, continuidade e trabalho multiagente.
 
-### Loop por unidade
+### 🔍 Compreensão de projetos
+**Graphify** auxilia na compreensão estrutural do código e na navegação de projetos.
 
-\`\`\`text
-PLAN → ASSIGN → EXECUTE → OBSERVE
-     → TEST → INDEPENDENT REVIEW → VERIFY
-     → ACCEPT / FIX / BLOCK
-\`\`\`
+### ⚡ Contexto e eficiência
+**RTK** e **Headroom** trabalham sobre contexto e excesso de informação para tornar o uso da IA mais eficiente quando aplicável.
 
-### Verificação
+### 🛡️ Segurança
+**Security Hooks** adiciona uma camada de proteção às operações do agente.
 
-\`\`\`text
-DEFINE → BREAK → VERIFY → VERDICT
-\`\`\`
+### 👁️ Observação
+**Task Observer** permite acompanhar e experimentar melhorias no comportamento do sistema de forma controlada.
 
-Veredictos:
+### 🎨 Qualidade de interface
+**Emil, Impeccable e Taste** ampliam o trabalho de design, interação, experiência e qualidade visual em projetos de interface.
 
-- `PROVEN`
-- `FAILED`
-- `NOT PROVEN`
-- `BLOCKED`
-
-> Build verde, HTTP 200, exit code 0 ou a afirmação de um agente não são, sozinhos, prova de conclusão.
+### ✅ Skills de engenharia
+O próprio Potencia possui skills para descoberta do problema, especificação, planejamento, verificação, revisão adversarial, limpeza e preparação final do projeto.
 
 <br>
 
-# `> GETTING.STARTED`
+# `> COMO.O.DESENVOLVIMENTO.MUDA`
 
-## Pré-requisitos
+### Sem uma estrutura
 
-O bootstrap detecta automaticamente:
+**IA → recebe tarefa → tenta fazer tudo → responde**
 
-- Claude Code;
-- Git;
-- Python;
-- Node.js/npm;
-- uv;
-- pipx;
-- Codex CLI quando aplicável;
-- Docker quando aplicável;
-- gerenciador de pacotes do sistema.
+### Com Potencia
 
-## Clonar
+**IA → entende → planeja → delega → desenvolve → testa → revisa → corrige → verifica**
 
-\`\`\`bash
-git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
-cd Potencia_IA
-\`\`\`
+A diferença está no processo.
 
-## Diagnóstico
+O Potencia busca impedir que o desenvolvimento termine simplesmente porque um agente afirmou que terminou.
 
-### Windows / PowerShell
-
-\`\`\`powershell
-powershell -ExecutionPolicy Bypass -File .\bootstrap\preflight.ps1
-\`\`\`
-
-### macOS / Linux
-
-\`\`\`bash
-bash ./bootstrap/preflight.sh
-\`\`\`
-
-> O preflight é diagnóstico. A instalação e ativação seguem `bootstrap/BOOTSTRAP.md`.
+O resultado precisa passar por testes, revisão e verificação de acordo com a tarefa.
 
 <br>
 
-# `> INSTALL.COMMANDS`
+# `> PARA.QUE.TIPO.DE.PROJETO`
 
-## Comandos padrão
+O Potencia pode ser utilizado como infraestrutura para:
 
-### Superpowers
+- aplicações web;
+- sistemas empresariais;
+- APIs;
+- automações;
+- ferramentas de IA;
+- aplicações desktop;
+- projetos de dados;
+- produtos digitais;
+- interfaces;
+- projetos grandes ou multidisciplinares.
 
-\`\`\`text
-/plugin install superpowers@claude-plugins-official
-\`\`\`
-
-### Graphify
-
-\`\`\`bash
-uv tool install graphifyy
-graphify install
-\`\`\`
-
-### RTK — Windows
-
-\`\`\`powershell
-winget install rtk-ai.rtk
-rtk --version
-rtk gain
-\`\`\`
-
-### VV Claude Harness
-
-\`\`\`text
-/plugin marketplace add oeftimie/vv-claude-harness
-/plugin install vv-harness
-\`\`\`
-
-### Security Hooks
-
-\`\`\`text
-/plugin marketplace add atompilot/claude-code-security-hooks
-/plugin install security-hooks@atompilot-security-hooks
-\`\`\`
-
-### Superharness
-
-\`\`\`bash
-pipx install superharness
-shux --help
-shux status
-\`\`\`
-
-### Task Observer
-
-\`\`\`bash
-npx skills add rebelytics/one-skill-to-rule-them-all --skill task-observer
-\`\`\`
-
-### Headroom
-
-\`\`\`bash
-uv tool install --python 3.13 "headroom-ai[all]"
-headroom --version
-headroom doctor
-headroom mcp install
-\`\`\`
-
-### OmniRoute
-
-\`\`\`bash
-npm install -g omniroute
-omniroute
-\`\`\`
-
-### Codex Subagents
-
-O projeto exige Python, uv, Codex CLI e Claude Code CLI. O bootstrap usa o instalador oficial após inspeção do procedimento do repositório.
-
-> O Potencia não inventa instaladores e não grava credenciais.
+Quanto mais áreas diferentes um projeto envolve, mais útil se torna poder distribuir o trabalho entre especialistas.
 
 <br>
 
-# `> ACTIVATE.WITH.CLAUDE`
+# `> UMA.INFRAESTRUTURA.REUTILIZÁVEL`
 
-## Prompt pronto para Claude Code
+A proposta do Potencia é evitar que você precise montar toda essa estrutura novamente a cada projeto.
 
-\`\`\`text
-Quero ativar o Potencia IA neste ambiente.
+Você prepara o ambiente do agente e passa a ter uma base reutilizável para novos trabalhos.
 
-Repositório:
-https://github.com/restoffkaua08-afk/Potencia_IA.git
+O objetivo é que a complexidade da orquestração fique por trás da experiência do desenvolvedor.
 
-Faça o bootstrap completo antes de tocar no meu projeto.
+Você apresenta:
 
-1. Obtenha o repositório se ele ainda não estiver no workspace.
-2. Leia CLAUDE.md primeiro.
-3. Leia os três prompts, MANIFEST.json, bootstrap/BOOTSTRAP.md e bootstrap/AGENT-POLICY.md.
-4. Estude todos os contratos de projetos, plugins e skills.
-5. Detecte o ambiente e os pré-requisitos.
-6. Instale, configure, ative e verifique os componentes aplicáveis.
-7. Superpowers é obrigatório para desenvolvimento não trivial.
-8. Para cada unidade DEVELOPMENT, use no mínimo 2 agentes auxiliares ativos:
-   - Executor/Especialista;
-   - Reviewer/Verifier independente.
-9. Adicione especialistas conforme a tarefa exigir.
-10. Não conte skills, plugins ou agentes apenas planejados como agentes ativos.
-11. Não aceite "done" como prova de conclusão.
-12. Registre evidências e estado em .potencia/runtime-state.json.
-13. Nunca grave credenciais, tokens ou API keys no repositório.
-14. Se houver falha, diagnostique e tente alternativas oficiais antes de marcar BLOCKED.
-15. Não implemente meu projeto durante o bootstrap.
+**o projeto + o objetivo + os requisitos**
 
-Quando o bootstrap estiver realmente concluído e verificado, responda exatamente:
-
-Claude code com Potencia Ativado!
-
-Depois disso, aguarde minha tarefa e use o Potencia como infraestrutura padrão.
-\`\`\`
+E o Potencia fornece a estrutura para que a IA possa organizar o trabalho, utilizar especialistas e validar o resultado.
 
 <br>
 
-# `> ACTIVATE.WITH.CODEX`
+# `> O.QUE.O.POTENCIA.NÃO.PROMETE`
 
-## Prompt pronto para Codex
+O Potencia não promete transformar uma IA em uma entidade perfeita ou eliminar todos os erros.
 
-\`\`\`text
-Quero preparar este ambiente usando o Potencia IA como infraestrutura de desenvolvimento multiagente.
+A proposta é mais concreta:
 
-Repositório do Potencia:
-https://github.com/restoffkaua08-afk/Potencia_IA.git
+> **dar à IA uma equipe, ferramentas e um processo melhores para trabalhar.**
 
-Faça primeiro a preparação da infraestrutura:
-
-1. Obtenha o repositório.
-2. Leia CLAUDE.md, MANIFEST.json, os três prompts, bootstrap/BOOTSTRAP.md e bootstrap/AGENT-POLICY.md.
-3. Estude os contratos de projetos, plugins e skills.
-4. Detecte o ambiente e os pré-requisitos.
-5. Configure o que for compatível com este ambiente.
-6. Use no mínimo 2 agentes auxiliares por unidade DEVELOPMENT quando houver suporte à delegação:
-   - Executor/Especialista;
-   - Reviewer/Verifier independente.
-7. Adicione especialistas conforme a tarefa exigir.
-8. Planeje, execute, teste, revise, corrija e verifique novamente.
-9. Não considere "done" como evidência suficiente.
-10. Registre limitações e evidências.
-11. Não exponha nem grave credenciais no repositório.
-
-Depois de preparar a infraestrutura, trabalhe no projeto abaixo usando o Potencia como padrão:
-
-REPOSITÓRIO DO PROJETO:
-[COLE AQUI O LINK DO REPOSITÓRIO]
-
-TAREFA:
-[DESCREVA A TAREFA AQUI]
-
-CRITÉRIOS DE ACEITAÇÃO:
-[DESCREVA COMO O RESULTADO DEVE SER VALIDADO]
-\`\`\`
+Mais agentes não significam automaticamente melhores resultados. O valor está na **coordenação, especialização, testes, revisão e verificação**.
 
 <br>
 
-# `> PROJECT.INPUT`
+# `> PRINCÍPIO`
 
-## Depois da ativação
-
-Quando o Claude retornar:
-
-\`\`\`text
-Claude code com Potencia Ativado!
-\`\`\`
-
-o usuário pode enviar somente a tarefa:
-
-\`\`\`text
-Faça o projeto descrito abaixo usando o Potencia IA.
-
-[DESCRIÇÃO]
-
-REQUISITOS:
-[REQUISITOS]
-
-CRITÉRIOS DE ACEITAÇÃO:
-[CRITÉRIOS]
-
-Não pare até implementar, testar, revisar e verificar o resultado.
-\`\`\`
-
-Ou fornecer um repositório:
-
-\`\`\`text
-Projeto:
-https://github.com/USUARIO/REPOSITORIO.git
-
-Execute o projeto usando o Potencia IA.
-\`\`\`
+> **Uma IA pode escrever código.**
+>
+> **Uma equipe de agentes pode desenvolver, testar, revisar, questionar e melhorar esse código.**
+>
+> **O Potencia IA existe para transformar essa ideia em uma infraestrutura reutilizável.**
 
 <br>
 
-# `> PROJECT.STRUCTURE`
+# `> STATUS`
 
-\`\`\`text
-Potencia_IA/
-├── CLAUDE.md
-├── MANIFEST.json
-├── prompts/
-├── projetos/
-├── plugins/
-├── skills/
-├── bootstrap/
-│   ├── BOOTSTRAP.md
-│   ├── AGENT-POLICY.md
-│   ├── COMPONENT-MATRIX.md
-│   ├── README.md
-│   ├── preflight.ps1
-│   └── preflight.sh
-├── task-observer-workspace/
-└── docs/
-\`\`\`
+**Potencia IA 0.2.0**
+
+Projeto em evolução, desenvolvido para crescer com novos agentes, projetos, skills, harnesses e ferramentas.
+
+Os componentes externos não são simplesmente copiados para este repositório. O Potencia organiza sua utilização, ativação e integração no ambiente do agente.
 
 <br>
 
-# `> OPERATIONAL.STATE`
-
-Estado operacional:
-
-\`\`\`text
-.potencia/runtime-state.json
-\`\`\`
-
-Registra ambiente, componentes, verificações, bloqueios, evidências e conformidade da política de agentes.
-
-**Segredos nunca entram nesse arquivo.**
-
-<br>
-
-# `> SECURITY`
-
-- credenciais ficam fora do Git;
-- API keys não são armazenadas no Potencia;
-- Security Hooks são tratados como camada de proteção;
-- ações de alto risco respeitam os controles do ambiente;
-- fontes de instalação são definidas pelos contratos;
-- mudanças irreversíveis respeitam os limites de autorização.
-
-<br>
-
-# `> DOCUMENTATION`
-
-- [USAGE.md](./docs/USAGE.md) — utilização;
-- [INSTALLATION-PRINCIPLES.md](./docs/INSTALLATION-PRINCIPLES.md) — princípios de instalação;
-- [OPERATION-MATRIX.md](./docs/OPERATION-MATRIX.md) — operação e validação;
-- [COMPONENT-SOURCES.md](./docs/COMPONENT-SOURCES.md) — fontes;
-- [BOOTSTRAP.md](./bootstrap/BOOTSTRAP.md) — bootstrap completo;
-- [AGENT-POLICY.md](./bootstrap/AGENT-POLICY.md) — política de agentes;
-- [COMPONENT-MATRIX.md](./bootstrap/COMPONENT-MATRIX.md) — matriz operacional.
-
-<br>
-
-# `> PROJECT.STATUS`
-
-**Potencia IA 0.2.0 — infraestrutura self-bootstrapping em evolução.**
-
-O repositório concentra contratos, prompts, skills, políticas, bootstrap, verificações e documentação para preparar um ambiente Claude Code com execução estruturada e multiagente.
-
-Os componentes externos não são apresentados como se estivessem incorporados ao repositório. O Potencia mantém contratos e fontes; a instalação real ocorre no ambiente do usuário e precisa ser verificada.
-
-<br>
-
-# `> ENGINEERING.PRINCIPLES`
-
-> **Planejar antes de executar. Delegar quando possível. Testar antes de aceitar. Revisar antes de concluir. Verificar antes de afirmar.**
-
-<br>
-
-# `> DEVELOPER`
+# `> DESENVOLVEDOR`
 
 <div align="center">
 
@@ -511,7 +232,7 @@ Os componentes externos não são apresentados como se estivessem incorporados a
 
 <br>
 
-`BUILD • TEST • REVIEW • VERIFY • EVOLVE`
+`BUILD • DELEGATE • TEST • REVIEW • VERIFY • EVOLVE`
 
 <br>
 
