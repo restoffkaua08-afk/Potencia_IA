@@ -8,9 +8,11 @@
 
 ### Uma infraestrutura para transformar agentes de IA em equipes especializadas de desenvolvimento.
 
+[![License](https://img.shields.io/badge/LICENSE-MIT-19B394?style=for-the-badge)](LICENSE)
 ![Status](https://img.shields.io/badge/STATUS-SELF%20BOOTSTRAPPING-00A7E1?style=for-the-badge&labelColor=071A2B)
 ![Método](https://img.shields.io/badge/M%C3%89TODO-MULTIAGENTE-19B394?style=for-the-badge&labelColor=071A2B)
 ![Foco](https://img.shields.io/badge/FOCO-CLAUDE%20CODE-7C3AED?style=for-the-badge&labelColor=071A2B)
+[![CI](https://github.com/restoffkaua08-afk/Potencia_IA/actions/workflows/validate.yml/badge.svg)](https://github.com/restoffkaua08-afk/Potencia_IA/actions/workflows/validate.yml)
 
 <br>
 
@@ -171,6 +173,20 @@ Quanto mais áreas diferentes um projeto envolve, mais útil se torna poder dist
 
 <br>
 
+# `> COMECE.EM.MINUTOS`
+
+O Potencia foi desenhado para ser entregue como uma pasta, ZIP ou repositório GitHub.
+
+O fluxo pretendido é simples:
+
+**1. Entregue o Potencia ao Claude Code → 2. peça `execute` → 3. deixe o bootstrap concluir → 4. receba a confirmação de ativação → 5. comece o projeto.**
+
+O comando operacional não deve ser confundido com apenas ler a documentação: o Potencia exige instalação, configuração, ativação e verificação dos componentes aplicáveis antes de considerar o ambiente pronto.
+
+> **Se você está avaliando o projeto, comece por `CLAUDE.md`, `bootstrap/` e `.claude/`.**
+
+<br>
+
 # `> UMA.INFRAESTRUTURA.REUTILIZÁVEL`
 
 A proposta do Potencia é evitar que você precise montar toda essa estrutura novamente a cada projeto.
@@ -209,11 +225,27 @@ Mais agentes não significam automaticamente melhores resultados. O valor está 
 
 <br>
 
+# `> ECOSSISTEMA`
+
+O Potencia organiza componentes de projetos externos em torno de uma proposta única de desenvolvimento assistido por agentes. Eles não são apresentados como produtos oficiais do Potencia nem como parcerias com seus mantenedores.
+
+- **Harness e agentes:** Superpowers, Superharness, VV Claude Harness, Codex Subagents
+- **Compreensão e contexto:** Graphify, RTK, Headroom
+- **Segurança e observabilidade:** Security Hooks, Task Observer
+- **Design e interface:** Emil, Impeccable, Taste
+- **Processo próprio:** Problem Discovery, Specification + Architecture Gate, Execution Planner, Verification, Adversarial Engineering Review, Project Cleanup e Project Seal
+
+As fontes e contratos de integração ficam documentados no próprio repositório.
+
+<br>
+
 # `> STATUS`
 
 **Potencia IA 0.2.0**
 
 Projeto em evolução, desenvolvido para crescer com novos agentes, projetos, skills, harnesses e ferramentas.
+
+Se este projeto fizer sentido para você, acompanhar o repositório e participar das discussões é a melhor forma de acompanhar sua evolução.
 
 Os componentes externos não são simplesmente copiados para este repositório. O Potencia organiza sua utilização, ativação e integração no ambiente do agente.
 
