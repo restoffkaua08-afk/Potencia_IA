@@ -6,6 +6,16 @@ This is the operational specification for turning a fresh Potencia IA checkout o
 
 The bootstrap is idempotent: detect first, install only what is missing, configure only what is necessary, verify after every change, and record state.
 
+## Automatic execution trigger
+
+Quando o usuário fornece o repositório/pasta do Potencia IA e usa **execute**, **executar**, **ativar**, **bootstrap** ou equivalente, isso inicia automaticamente este documento como uma missão operacional.
+
+**Não é necessário um segundo prompt para autorizar o bootstrap.**
+
+O agente deve continuar pelas fases 0–8 sem voltar ao usuário para perguntar qual é a missão. O projeto do usuário só entra em execução depois do Final Gate.
+
+Se o ambiente permitir executar uma ação automaticamente, execute-a. Não substitua execução por explicação.
+
 ## Golden rule
 
 Do not confuse:
@@ -232,6 +242,18 @@ Where applicable demonstrate:
 - Task Observer can create/read workspace state.
 
 ## Phase 8 — Final gate
+
+Antes do Final Gate, faça uma checagem anti-falso-positivo:
+
+- o repositório foi apenas lido? Então NÃO está ativado;
+- as skills foram apenas carregadas? Então NÃO está ativado;
+- um componente foi instalado mas não testado? Então NÃO está VERIFIED;
+- um plugin foi instalado mas não está disponível? Então NÃO está ACTIVE;
+- os agentes foram apenas mencionados? Então NÃO estão ativos;
+- o runtime-state não foi escrito? Então NÃO há conclusão do bootstrap.
+
+O agente não deve encerrar o bootstrap para perguntar pela missão do usuário. O único encerramento normal após `execute` é o sucesso do Final Gate ou um bloqueio real que exija ação humana.
+
 
 Bootstrap succeeds only when all required components are VERIFIED, optional components are explicitly VERIFIED/NOT_APPLICABLE/BLOCKED with a reason, no essential human action is pending, runtime state is written, and Claude Code can continue into user work without another setup phase.
 
