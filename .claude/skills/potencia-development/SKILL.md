@@ -13,7 +13,7 @@ ENTENDER → DESCOBRIR → ESPECIFICAR → ARQUITETAR → PLANEJAR → DELEGAR �
 
 ## Regra mínima
 
-Para uma unidade classificada como DEVELOPMENT, respeite o contrato de bootstrap/AGENT-POLICY.md: dois agentes auxiliares no mínimo quando o ambiente suportar a delegação, com Executor/Especialista e Reviewer/Verifier.
+Para uma unidade classificada como DEVELOPMENT, respeite o contrato de ../../bootstrap/AGENT-POLICY.md: dois agentes auxiliares no mínimo quando o ambiente suportar a delegação, com Executor/Especialista e Reviewer/Verifier.
 
 A revisão deve ser independente. Build verde ou ausência de erro aparente não substitui evidência de aceitação.
 
