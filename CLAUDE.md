@@ -24,7 +24,37 @@ Não comece o projeto do usuário antes de concluir a ativação do Potencia.
 
 ---
 
-## 1. Entrada obrigatória
+## 1. GATILHO AUTOMÁTICO DE EXECUÇÃO
+
+O Potencia deve tratar a combinação **link/pasta do repositório Potencia_IA + a ordem `execute` (ou equivalente: executar, ativar, bootstrap, iniciar)** como um **comando operacional de bootstrap**, e NÃO como um pedido de explicação, leitura ou resumo.
+
+### Regra de ouro do `execute`
+
+Quando essa entrada for detectada, execute imediatamente o bootstrap completo. Não pergunte qual é a missão do usuário, não peça outra confirmação e não inicie o projeto do usuário antes do Final Gate.
+
+O fluxo obrigatório é:
+
+**RECEBER → IDENTIFICAR POTENCIA → OBTER/ABRIR REPOSITÓRIO → LER CONTRATOS → DETECTAR AMBIENTE → INSTALAR → CONFIGURAR → ATIVAR → VERIFICAR → CORRIGIR → VERIFICAR NOVAMENTE → INTEGRAÇÃO → FINAL GATE**
+
+A palavra `execute` NÃO significa "leia o Potencia e aguarde instruções". Ela significa **execute a ativação do Potencia agora**.
+
+Enquanto o bootstrap estiver incompleto, o estado deve ser `BOOTSTRAPPING` e o Claude deve continuar executando as fases. É proibido declarar o Potencia como ativado apenas porque os arquivos foram lidos ou as skills foram carregadas no contexto.
+
+Também é proibido responder com frases como "Qual a missão agora?", "Estou pronto", "Potencia carregado" ou equivalentes antes do Final Gate quando o gatilho `execute` estiver presente.
+
+Somente o Final Gate pode encerrar o bootstrap.
+
+### Estados obrigatórios
+
+`READ` → `INSTALLED` → `CONFIGURED` → `ACTIVE` → `VERIFIED`
+
+Nenhum estado posterior pode ser inferido automaticamente de um estado anterior.
+
+**READ não é ACTIVATION. INSTALLED não é ACTIVE. ACTIVE não é VERIFIED.**
+
+Se uma etapa exigir interação suportada pelo próprio Claude Code, execute-a. Se exigir uma ação humana que não possa ser automatizada, registre o bloqueio e continue tudo que for possível; não transforme uma limitação em sucesso.
+
+## 2. Entrada obrigatória
 
 **Leia este arquivo primeiro.** Depois siga obrigatoriamente:
 1. prompts/01-iniciar-projeto.md
@@ -39,7 +69,7 @@ Não trate esses arquivos como documentação opcional.
 
 ---
 
-## 2. Primeira missão: BOOTSTRAP DO POTENCIA
+## 3. Primeira missão: BOOTSTRAP DO POTENCIA
 
 Quando o usuário pedir para executar, ativar, instalar ou configurar o Potencia, sua primeira missão é transformar a instalação recebida em um ambiente operacional, verificável e pronto para uso.
 
@@ -81,7 +111,7 @@ Somente depois do bootstrap verificado:
 
 ---
 
-## 3. Regra de ativação obrigatória
+## 4. Regra de ativação obrigatória
 
 Depois do bootstrap, os componentes do Potencia tornam-se parte da infraestrutura padrão do trabalho.
 
@@ -103,7 +133,7 @@ Se um componente não puder ser usado, registre por quê e qual alternativa veri
 
 ---
 
-## 4. Política obrigatória de agentes
+## 5. Política obrigatória de agentes
 
 Esta política é **normativa**, não uma recomendação.
 
@@ -198,7 +228,7 @@ A política mínima deve ser verificável, não apenas declarada.
 
 ---
 
-## 5. Ciclo obrigatório de desenvolvimento
+## 6. Ciclo obrigatório de desenvolvimento
 
 Para qualquer trabalho não trivial:
 
@@ -222,7 +252,7 @@ Build verde, HTTP 200, exit code 0 ou "parece funcionar" não são prova suficie
 
 ---
 
-## 6. Gates
+## 7. Gates
 
 ### Discovery
 Defina problema, usuários, objetivo, escopo, entradas/saídas, restrições, requisitos, preferências, proibições, casos-limite, integrações, segurança, performance e sucesso.
@@ -248,7 +278,7 @@ Corrija achados e verifique novamente.
 
 ---
 
-## 7. Autonomia
+## 8. Autonomia
 
 Trabalhe continuamente quando houver informação suficiente.
 
@@ -264,7 +294,7 @@ Não transforme limitações normais em perguntas desnecessárias.
 
 ---
 
-## 8. Verdade operacional
+## 9. Verdade operacional
 
 Nunca simule instalação, ativação, leitura, teste, delegação, revisão ou aprovação.
 
@@ -274,7 +304,7 @@ Se uma ferramenta mudou desde a documentação local, consulte a fonte oficial a
 
 ---
 
-## 9. Estado do Potencia
+## 10. Estado do Potencia
 
 Mantenha estado local em:
 
@@ -300,7 +330,7 @@ Nunca coloque tokens, API keys, senhas ou credenciais nesse arquivo ou no reposi
 
 ---
 
-## 10. Conclusão do bootstrap
+## 11. Conclusão do bootstrap
 
 Só considere o Potencia operacional quando:
 1. todos os componentes aplicáveis foram processados;
@@ -328,7 +358,7 @@ Se o bootstrap não puder ser concluído, não use essa frase. Informe objetivam
 
 ---
 
-## 11. Componentes configurados
+## 12. Componentes configurados
 
 ### Projetos/agentes
 1. Superpowers
@@ -370,7 +400,7 @@ O Observer pode experimentar dentro do laboratório, mas não pode autonomamente
 
 ---
 
-## 12. Limpeza e selo
+## 13. Limpeza e selo
 
 09-project-cleanup só pode executar a limpeza destrutiva do projeto depois da validação do usuário.
 
@@ -380,7 +410,7 @@ Isso não impede o bootstrap de limpar seus próprios temporários ou corrigir u
 
 ---
 
-## 13. Regra de conclusão de projetos
+## 14. Regra de conclusão de projetos
 
 "Terminado" significa:
 - critérios de aceitação atendidos;
