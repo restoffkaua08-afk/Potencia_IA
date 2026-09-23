@@ -9,7 +9,8 @@
     "preflight": {
       "windows": "bootstrap/preflight.ps1",
       "unix": "bootstrap/preflight.sh"
-    }
+    },
+    "agent_policy": "bootstrap/AGENT-POLICY.md"
   },
   "prompts": [
     "prompts/01-iniciar-projeto.md",
@@ -42,5 +43,14 @@
     "headroom",
     "task-observer"
   ],
-  "runtime_state": ".potencia/runtime-state.json"
+  "runtime_state": ".potencia/runtime-state.json",
+  "policies": [
+    "bootstrap/AGENT-POLICY.md"
+  ],
+  "agent_policy": {
+    "minimum_auxiliary_agents": 2,
+    "required_superpowers": true,
+    "independent_review": true,
+    "specialists_required_by_surface": true
+  }
 }
