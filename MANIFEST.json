@@ -1,0 +1,9 @@
+{
+  "name":"potencia-IA",
+  "version":"0.1.0",
+  "entrypoint":"CLAUDE.md",
+  "prompts":["prompts/01-iniciar-projeto.md","prompts/02-continuar-projeto.md","prompts/03-missao-autonoma.md"],
+  "skills":["01-problem-discovery","02-specification-architecture-gate","03-execution-planner","04-verification","05-adversarial-engineering-review","06-emil","07-impeccable","08-taste","09-project-cleanup","10-project-seal"],
+  "projects":["01-superpowers","02-graphify","03-rtk","04-vv-harness","05-security-hooks","06-superharness","07-codex-subagents"],
+  "plugins":["omni-route","headroom","task-observer"]
+}
