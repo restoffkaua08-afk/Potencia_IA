@@ -32,7 +32,8 @@ Não comece o projeto do usuário antes de concluir a ativação do Potencia.
 3. prompts/03-missao-autonoma.md
 4. MANIFEST.json
 5. bootstrap/BOOTSTRAP.md
-6. os contratos em projetos/, plugins/ e skills/.
+6. bootstrap/AGENT-POLICY.md
+7. os contratos em projetos/, plugins/ e skills/.
 
 Não trate esses arquivos como documentação opcional.
 
@@ -102,7 +103,102 @@ Se um componente não puder ser usado, registre por quê e qual alternativa veri
 
 ---
 
-## 4. Ciclo obrigatório de desenvolvimento
+## 4. Política obrigatória de agentes
+
+Esta política é **normativa**, não uma recomendação.
+
+### 4.1 Superpowers é obrigatório
+
+Para trabalho de desenvolvimento não trivial, o Claude Code deve:
+1. verificar que Superpowers está instalado;
+2. verificar que está ativo/disponível;
+3. usar suas capacidades/metodologia quando aplicáveis ao fluxo;
+4. registrar a evidência de ativação.
+
+Se Superpowers não estiver disponível, a tarefa de desenvolvimento deve ficar **BLOCKED**, salvo se o bloqueio for explicitamente classificado pelo runtime como uma exceção operacional autorizada e documentada. Não alegue conformidade enquanto ele estiver indisponível.
+
+### 4.2 Piso de agentes
+
+Para qualquer tarefa classificada como **DEVELOPMENT**, o Potencia exige:
+
+**mínimo de 2 agentes auxiliares ativos**, além do agente supervisor/orquestrador principal quando a arquitetura do ambiente separar esses papéis.
+
+No mínimo:
+- **Agent 1 — Executor/Especialista:** executa a unidade de trabalho;
+- **Agent 2 — Reviewer/Verifier:** revisa e verifica independentemente o resultado.
+
+Para tarefas de maior risco, complexidade ou impacto, o plano deve elevar o número de agentes e incluir especialistas de domínio.
+
+### 4.3 Especialização obrigatória
+
+Não basta iniciar dois agentes genéricos.
+
+O planejador deve escolher os especialistas adequados ao trabalho, quando aplicáveis, por exemplo:
+- frontend/UI/UX;
+- backend/API;
+- banco de dados;
+- segurança;
+- QA/testes;
+- arquitetura;
+- performance;
+- DevOps/deploy;
+- IA/prompts/eval;
+- acessibilidade;
+- documentação.
+
+A quantidade e os papéis devem ser determinados pela superfície de risco e pelos critérios de aceitação.
+
+### 4.4 Independência da revisão
+
+O agente que implementa uma unidade **não pode ser a única fonte de aprovação daquela mesma unidade**.
+
+O resultado deve passar por um agente independente/fresh-eyes sempre que o ambiente permitir.
+
+A sequência mínima é:
+
+**ASSIGN → EXECUTE → OBSERVE → TEST → INDEPENDENT REVIEW → VERIFY → ACCEPT / FIX**
+
+Se a revisão encontrar problema:
+
+**FINDING → CORRECTION → TEST → VERIFY AGAIN → REVIEW AGAIN quando necessário**
+
+### 4.5 Regra anti-monólito
+
+É proibido tratar o uso de agentes como mera decoração de prompt.
+
+Quando existir um agente/projeto configurado e adequado:
+- ele deve ser ativado/usado;
+- sua saída deve ser inspecionada;
+- seus resultados devem entrar no estado/evidência;
+- não pode ser substituído por execução monolítica apenas por conveniência.
+
+Se a delegação não for possível por limitação real do ambiente, registre:
+- agente pretendido;
+- motivo do bloqueio;
+- alternativa usada;
+- impacto na confiança/verificação.
+
+### 4.6 Estado obrigatório
+
+Para cada unidade de desenvolvimento, registre no estado operacional, quando suportado:
+
+- task_id;
+- required_agents;
+- active_agents;
+- agent_roles;
+- execution_agent;
+- reviewer_agent;
+- specialist_agents;
+- verification_status;
+- findings;
+- corrections;
+- evidence.
+
+A política mínima deve ser verificável, não apenas declarada.
+
+---
+
+## 5. Ciclo obrigatório de desenvolvimento
 
 Para qualquer trabalho não trivial:
 
@@ -110,7 +206,7 @@ Para qualquer trabalho não trivial:
 
 Loop mínimo por unidade:
 
-**PLAN → ASSIGN → EXECUTE → OBSERVE → TEST → VERIFY → ACCEPT / FIX / BLOCK**
+**PLAN → ASSIGN → EXECUTE → OBSERVE → TEST → INDEPENDENT REVIEW → VERIFY → ACCEPT / FIX / BLOCK**
 
 Verificação:
 
@@ -126,7 +222,7 @@ Build verde, HTTP 200, exit code 0 ou "parece funcionar" não são prova suficie
 
 ---
 
-## 5. Gates
+## 6. Gates
 
 ### Discovery
 Defina problema, usuários, objetivo, escopo, entradas/saídas, restrições, requisitos, preferências, proibições, casos-limite, integrações, segurança, performance e sucesso.
@@ -152,7 +248,7 @@ Corrija achados e verifique novamente.
 
 ---
 
-## 6. Autonomia
+## 7. Autonomia
 
 Trabalhe continuamente quando houver informação suficiente.
 
@@ -168,7 +264,7 @@ Não transforme limitações normais em perguntas desnecessárias.
 
 ---
 
-## 7. Verdade operacional
+## 8. Verdade operacional
 
 Nunca simule instalação, ativação, leitura, teste, delegação, revisão ou aprovação.
 
@@ -178,7 +274,7 @@ Se uma ferramenta mudou desde a documentação local, consulte a fonte oficial a
 
 ---
 
-## 8. Estado do Potencia
+## 9. Estado do Potencia
 
 Mantenha estado local em:
 
@@ -197,13 +293,14 @@ O estado registra:
 - comandos/testes;
 - evidências;
 - limitações;
-- última verificação.
+- última verificação;
+- conformidade da política de agentes por tarefa, quando aplicável.
 
 Nunca coloque tokens, API keys, senhas ou credenciais nesse arquivo ou no repositório.
 
 ---
 
-## 9. Conclusão do bootstrap
+## 10. Conclusão do bootstrap
 
 Só considere o Potencia operacional quando:
 1. todos os componentes aplicáveis foram processados;
@@ -231,7 +328,7 @@ Se o bootstrap não puder ser concluído, não use essa frase. Informe objetivam
 
 ---
 
-## 10. Componentes configurados
+## 11. Componentes configurados
 
 ### Projetos/agentes
 1. Superpowers
@@ -273,7 +370,7 @@ O Observer pode experimentar dentro do laboratório, mas não pode autonomamente
 
 ---
 
-## 11. Limpeza e selo
+## 12. Limpeza e selo
 
 09-project-cleanup só pode executar a limpeza destrutiva do projeto depois da validação do usuário.
 
@@ -283,13 +380,14 @@ Isso não impede o bootstrap de limpar seus próprios temporários ou corrigir u
 
 ---
 
-## 12. Regra de conclusão de projetos
+## 13. Regra de conclusão de projetos
 
 "Terminado" significa:
 - critérios de aceitação atendidos;
 - comportamento real verificado;
 - problemas encontrados tratados;
-- revisão concluída;
+- revisão independente concluída;
 - estado final conhecido;
 - documentação coerente;
-- nenhuma falsa alegação de sucesso.
+- nenhuma falsa alegação de sucesso;
+- política mínima de agentes satisfeita ou bloqueio explicitamente registrado.
