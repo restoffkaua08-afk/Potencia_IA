@@ -49,33 +49,58 @@ O plano deve conter:
 - tarefas;
 - dependências;
 - paralelismo;
-- agente responsável;
+- agentes responsáveis;
 - arquivos;
 - testes;
 - critérios de aceitação;
 - checkpoints;
 - riscos.
 
-## 5. Delegar
+## 5. Delegar — POLÍTICA OBRIGATÓRIA
 
-**É obrigatório usar agentes/projetos configurados quando forem adequados.**
+Consulte `bootstrap/AGENT-POLICY.md`.
 
-Não substitua automaticamente:
-- revisão por auto-revisão;
-- paralelismo por trabalho sequencial;
-- harness por memória informal;
-- Graphify por grep quando a análise estrutural for necessária;
-- Codex Subagents por um único agente quando houver unidades independentes;
-- Superharness por execução monolítica em tarefas que exigem coordenação.
+Para qualquer tarefa de **DEVELOPMENT**, o Potencia exige **no mínimo 2 agentes auxiliares ativos**.
 
-Toda delegação deve receber:
+O mínimo é:
+1. **Executor/Especialista** — implementa a unidade;
+2. **Reviewer/Verifier** — revisa e verifica independentemente.
+
+O agente executor não pode ser a única fonte de aprovação.
+
+Para tarefas complexas, sensíveis ou multidisciplinares, adicione especialistas conforme a superfície do problema: segurança, QA, arquitetura, banco, frontend, backend, DevOps, IA, performance, acessibilidade etc.
+
+### Superpowers obrigatório
+
+Antes da implementação:
+- confirme Superpowers ativo;
+- use a metodologia/capacidades aplicáveis;
+- registre a evidência.
+
+Se Superpowers estiver indisponível, não declare a tarefa como conforme ao Potencia.
+
+### Agentes configurados
+
+Quando um projeto/agente adequado estiver disponível, ele deve ser efetivamente usado, não apenas mencionado:
+- Superpowers;
+- Graphify;
+- VV Claude Harness;
+- Superharness;
+- Codex Subagents, quando disponível;
+- Security Hooks como proteção obrigatória.
+
+### Regra de delegação
+
+Toda delegação recebe:
 - objetivo;
 - contexto;
 - escopo;
 - arquivos;
 - restrições;
-- critérios;
-- forma de validação.
+- critérios de aceitação;
+- testes/forma de validação.
+
+Toda resposta de agente deve ser tratada como evidência a ser inspecionada, não como prova automática.
 
 ## 6. Executar
 
@@ -83,7 +108,11 @@ Trabalhe por unidades pequenas e verificáveis.
 
 Loop:
 
-**PLAN → ASSIGN → EXECUTE → OBSERVE → TEST → VERIFY → ACCEPT / FIX / BLOCK**
+**PLAN → ASSIGN → EXECUTE → OBSERVE → TEST → INDEPENDENT REVIEW → VERIFY → ACCEPT / FIX / BLOCK**
+
+Se o review falhar:
+
+**FINDING → CORRECTION → TEST → VERIFY AGAIN**
 
 ## 7. Economia de contexto/tokens
 
@@ -163,5 +192,15 @@ Não diga que terminou porque:
 - retornou HTTP 200;
 - um agente disse "done".
 
-Termine contra os critérios reais e com evidência.
+Termine contra os critérios reais, com revisão independente e evidência.
+
+## 14. Regra de encerramento
+
+Uma unidade de desenvolvimento só pode ser marcada como **ACCEPT** quando:
+- critérios de aceitação estão PROVEN;
+- testes aplicáveis passaram;
+- revisão independente foi concluída;
+- achados críticos foram corrigidos;
+- verificação pós-correção passou;
+- piso mínimo de agentes foi satisfeito ou um bloqueio explícito foi registrado.
 
