@@ -1,0 +1,23 @@
+name: Datadog Synthetics
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  synthetics:
+    if: ${{ secrets.DD_API_KEY != '' && secrets.DD_APP_KEY != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Datadog Synthetic tests
+        uses: DataDog/synthetics-ci-github-action@v4.1.1
+        with:
+          api-key: ${{ secrets.DD_API_KEY }}
+          app-key: ${{ secrets.DD_APP_KEY }}
