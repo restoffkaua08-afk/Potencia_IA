@@ -29,6 +29,8 @@ class RuntimeServerTests(unittest.TestCase):
                 server.execute_command({"command": "agent.remove", "id": "agent-1"})
                 self.assertEqual(server.state.snapshot()["agents"], [])
                 self.assertIsNone(server.execute_command({"command": "shell.exec", "command_text": "dir"}))
+                with self.assertRaises(ValueError):
+                    server.execute_command([])
             finally:
                 server.shutdown()
 
