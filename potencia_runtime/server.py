@@ -160,6 +160,7 @@ class RuntimeServer:
 
         self.httpd = ThreadingHTTPServer((host, port), Handler)
         self.httpd.daemon_threads = True
+        self.httpd._BaseServer__is_shut_down.set()
 
     def execute_command(self, body: dict[str, Any]) -> dict[str, Any] | None:
         command = body.get("command")
