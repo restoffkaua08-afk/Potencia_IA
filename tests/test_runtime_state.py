@@ -27,7 +27,7 @@ class RuntimeStateTests(unittest.TestCase):
             self.assertEqual(snapshot["agents"], [{"id": "a1", "name": "Agent"}])
             self.assertEqual(snapshot["tasks"], [])
             self.assertEqual(snapshot["events"], [])
-            self.assertEqual(snapshot["potencia_version"], "0.3.0")
+            self.assertEqual(snapshot["potencia_version"], "0.4.0")
             self.assertEqual(snapshot["protocol_version"], "1")
 
     def test_update_persists_without_deadlock(self):

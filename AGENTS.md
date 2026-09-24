@@ -10,11 +10,13 @@ Quando o usuário pedir para instalar, ativar, executar, fazer bootstrap ou usar
 2. Leia MANIFEST.json, bootstrap/BOOTSTRAP.md e bootstrap/AGENT-POLICY.md.
 3. Leia os contratos de todos os componentes listados em projetos/, plugins/ e skills/.
 4. Detecte o ambiente e instale automaticamente todos os componentes configurados.
-5. Configure e ative imediatamente todos os componentes instalados para a sessão do Codex.
-6. Inicie os serviços persistentes de contexto, tokens e roteamento e verifique sua saúde.
-7. Execute instalação, configuração e verificações reais; não apenas explique.
-8. Registre evidências em .potencia/runtime-state.json.
-9. Não declare o Potencia ativo sem o Final Gate.
+5. Execute `python -m potencia_runtime bootstrap --workspace .` e aguarde o Final Gate.
+6. Leia `.potencia/runtime-state.json`; se o resultado for BLOCKED, execute as ações de host registradas e repita o comando até VERIFIED.
+7. Configure e ative imediatamente todos os componentes instalados para a sessão do Codex.
+8. Inicie os serviços persistentes de contexto, tokens e roteamento e verifique sua saúde.
+9. Execute instalação, configuração e verificações reais; não apenas explique.
+10. Registre evidências em .potencia/runtime-state.json.
+11. Não declare o Potencia ativo sem o Final Gate.
 
 O comando execute (ou executar/ativar/bootstrap/iniciar) significa iniciar o bootstrap operacional completo. Não peça ao usuário para chamar componentes individualmente depois.
 

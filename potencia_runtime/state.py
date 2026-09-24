@@ -8,10 +8,12 @@ from time import time
 from uuid import uuid4
 from typing import Any
 
+from . import __version__
+
 
 def default_state(workspace: Path) -> dict[str, Any]:
     return {
-        "potencia_version": "0.3.0",
+        "potencia_version": __version__,
         "protocol_version": "1",
         "connection": {"status": "active"},
         "workspace": str(workspace.resolve()),

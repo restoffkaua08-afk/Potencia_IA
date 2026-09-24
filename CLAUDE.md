@@ -75,7 +75,7 @@ Quando o usuário pedir para executar, ativar, instalar ou configurar o Potencia
 
 ### Fase A — Bootstrap
 
-Na primeira execução, instale, configure, ative e verifique automaticamente todos os componentes definidos no MANIFEST.json. Nenhum componente configurado é opcional: a aplicabilidade decide como ele será usado na tarefa, não se ele será instalado, ativado ou deixado disponível:
+Na primeira execução, execute `python -m potencia_runtime bootstrap --workspace .`. Esse comando instala, configura, ativa e verifica automaticamente todos os componentes definidos no MANIFEST.json; leia o Final Gate em `.potencia/runtime-state.json` antes de continuar. Nenhum componente configurado é opcional: a aplicabilidade decide como ele será usado na tarefa, não se ele será instalado, ativado ou deixado disponível:
 - projetos/agentes externos;
 - plugins;
 - skills;
@@ -129,7 +129,7 @@ Para cada projeto do usuário, use:
 
 Não faça execução monolítica por conveniência quando existir componente configurado e adequado.
 
-Se um componente não puder ser usado no host, registre BLOCKED, o motivo exato, a tentativa realizada e a alternativa verificável. Não trate a indisponibilidade como opção silenciosa.
+Se um componente não puder ser usado no host, execute a ação de host registrada pelo bootstrap, repita o comando e só então registre BLOCKED com o motivo exato, a tentativa realizada e a alternativa verificável. Não trate a indisponibilidade como opção silenciosa.
 
 ---
 
