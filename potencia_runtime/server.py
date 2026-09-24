@@ -167,7 +167,7 @@ class RuntimeServer:
             raise ValueError("command must be an object")
         command = body.get("command")
         if command == "ping":
-            event = self.state.emit("runtime_ping", {"source": "desktop"})
+            event = self.state.emit("runtime_ping", {"source": "terminal"})
             self.broadcast(event)
             return {"event": event}
 
