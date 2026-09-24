@@ -134,6 +134,8 @@ class RuntimeServer:
                     if length < 0 or length > 1_000_000:
                         raise ValueError("invalid content length")
                     body = json.loads(self.rfile.read(length) or b"{}")
+                    if not isinstance(body, dict):
+                        raise ValueError("request body must be an object")
                 except (ValueError, json.JSONDecodeError):
                     self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_json"})
                     return
