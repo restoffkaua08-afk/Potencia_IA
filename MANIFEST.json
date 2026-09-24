@@ -1,8 +1,15 @@
 {
   "name": "potencia-IA",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "product_status": "self_bootstrapping",
   "entrypoint": "CLAUDE.md",
+  "runtime": {
+    "package": "potencia_runtime",
+    "protocol_version": "1",
+    "desktop_protocol": "docs/DESKTOP-PROTOCOL.md",
+    "default_port": 43173,
+    "bind": "127.0.0.1"
+  },
   "bootstrap": {
     "spec": "bootstrap/BOOTSTRAP.md",
     "matrix": "bootstrap/COMPONENT-MATRIX.md",
