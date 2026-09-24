@@ -13,6 +13,7 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
+from . import __version__
 from .state import RuntimeState
 
 TOKEN_HEADER = "Authorization"
@@ -89,7 +90,7 @@ class RuntimeServer:
                         "ok": True,
                         "service": "potencia-runtime",
                         "protocol_version": "1",
-                        "potencia_version": "0.3.0",
+                        "potencia_version": __version__,
                         "workspace": str(server.workspace),
                     })
                     return
