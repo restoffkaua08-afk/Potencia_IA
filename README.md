@@ -241,7 +241,7 @@ As fontes e contratos de integração ficam documentados no próprio repositóri
 
 # `> STATUS`
 
-**Potencia IA 0.3.0**
+**Potencia IA 0.3.1**
 
 O Runtime possui pacote instalável, CLI, persistência local, API HTTP autenticada, SSE, comandos estruturados, diagnóstico local e testes automatizados.
 
