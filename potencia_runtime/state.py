@@ -54,7 +54,7 @@ class RuntimeState:
             self._state.update(patch)
             self._state["updated_at"] = time()
             self._persist()
-            return self.snapshot()
+            return json.loads(json.dumps(self._state))
 
     def emit(self, event_type: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
         event = {
