@@ -1,13 +1,12 @@
 # Potencia Bootstrap
 
-Execute o bootstrap operacional completo do Potencia.
+Execute o bootstrap operacional real do Potencia na raiz do projeto do usuário.
 
-1. Leia CLAUDE.md, MANIFEST.json e todos os contratos do Potencia.
-2. Detecte o ambiente.
-3. Instale automaticamente todos os projetos, plugins, skills, hooks, CLIs e dependências configurados.
-4. Configure e ative todos eles para a sessão atual e para as próximas sessões.
-5. Inicie Headroom e OmniRoute em modo persistente com roteamento automático.
-6. Registre o estado em .potencia/runtime-state.json.
-7. Execute o Final Gate com evidências reais.
+1. Leia CLAUDE.md, MANIFEST.json e os contratos em bootstrap/, projetos/, plugins/ e .claude/.
+2. Execute python -m potencia_runtime bootstrap --workspace . (ou potencia bootstrap --workspace . se o pacote estiver instalado).
+3. Deixe o processo instalar, configurar, iniciar e verificar todos os componentes.
+4. Leia .potencia/runtime-state.json e confira o Final Gate.
+5. Se houver BLOCKED, execute no host a ação exata registrada em components[*].evidence, quando ela exigir interação do Claude/Codex, e rode o bootstrap novamente.
+6. Só termine quando o estado for VERIFIED; caso contrário, informe o bloqueio objetivo e não alegue ativação.
 
-Não trate nenhum componente configurado como opcional e não peça ao usuário para ativá-lo manualmente. Se uma integração for tecnicamente impossível no host, registre BLOCKED com o motivo exato; não declare sucesso parcial.
+O bootstrap é obrigatório. Nenhum componente configurado pode ser pulado silenciosamente.
