@@ -163,6 +163,8 @@ class RuntimeServer:
         self.httpd._BaseServer__is_shut_down.set()
 
     def execute_command(self, body: dict[str, Any]) -> dict[str, Any] | None:
+        if not isinstance(body, dict):
+            raise ValueError("command must be an object")
         command = body.get("command")
         if command == "ping":
             event = self.state.emit("runtime_ping", {"source": "desktop"})
@@ -242,7 +244,11 @@ class RuntimeServer:
         if self.stop_event.is_set():
             return
         self.state.emit("runtime_connected", {"port": self.httpd.server_port})
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except (OSError, ValueError):
+            if not self.stop_event.is_set():
+                raise
 
     def shutdown(self) -> None:
         self.stop_event.set()
