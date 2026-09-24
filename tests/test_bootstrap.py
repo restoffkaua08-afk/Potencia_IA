@@ -17,7 +17,12 @@ class FakeRunner:
 
     def run(self, argv, *, cwd=None, timeout=120):
         self.calls.append((list(argv), cwd, timeout))
-        return CommandResult(list(argv), 0, stdout="ok")
+        stdout = "ok"
+        if argv == ["claude", "mcp", "list"]:
+            stdout = "codex-subagent stdio"
+        if argv == ["codex", "plugin", "list"]:
+            stdout = "superpowers"
+        return CommandResult(list(argv), 0, stdout=stdout)
 
     def spawn(self, argv, *, cwd, log_path):
         self.spawned.append((list(argv), cwd, log_path))
@@ -25,19 +30,44 @@ class FakeRunner:
 
 
 def make_workspace(root):
-    for path in (
-        "CLAUDE.md",
-        "AGENTS.md",
-        "MANIFEST.json",
-        "bootstrap/BOOTSTRAP.md",
-        "bootstrap/AGENT-POLICY.md",
-        "bootstrap/COMPONENT-MATRIX.md",
+    manifest = {
+        "name": "potencia-IA",
+        "version": "0.4.0",
+        "projects": ["01-superpowers"],
+        "plugins": ["omni-route", "headroom"],
+    }
+    for path, content in (
+        ("CLAUDE.md", "fixture"),
+        ("AGENTS.md", "fixture"),
+        ("MANIFEST.json", json.dumps(manifest)),
+        ("bootstrap/BOOTSTRAP.md", "fixture"),
+        ("bootstrap/AGENT-POLICY.md", "fixture"),
+        ("bootstrap/COMPONENT-MATRIX.md", "fixture"),
     ):
         target = root / path
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text("fixture", encoding="utf-8")
+        target.write_text(content, encoding="utf-8")
     for path in (".claude/skills", ".claude/agents", ".claude/commands"):
         (root / path).mkdir(parents=True, exist_ok=True)
+
+
+def make_claude_registry(home):
+    registry = home / ".claude" / "plugins"
+    registry.mkdir(parents=True)
+    entries = {}
+    for plugin_key in (
+        "superpowers@superpowers-marketplace",
+        "vv-harness",
+        "security-hooks@atompilot-security-hooks",
+        "superharness",
+    ):
+        install_path = home / "installed" / plugin_key.replace("@", "-")
+        install_path.mkdir(parents=True)
+        entries[plugin_key] = [{"installPath": str(install_path)}]
+    (registry / "installed_plugins.json").write_text(
+        json.dumps({"plugins": entries}),
+        encoding="utf-8",
+    )
 
 
 class BootstrapTests(unittest.TestCase):
@@ -59,6 +89,44 @@ class BootstrapTests(unittest.TestCase):
             self.assertTrue((root / ".potencia/runtime-state.json").is_file())
             commands = [entry["argv"] for entry in state["components"]["headroom"]["commands"]]
             self.assertIn(["headroom", "mcp", "status"], commands)
+
+    def test_claude_host_requires_plugin_registry_and_mcp_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "workspace"
+            home = Path(tmp) / "home"
+            root.mkdir()
+            make_workspace(root)
+            make_claude_registry(home)
+            runner = FakeRunner({"claude", "uv", "headroom", "omniroute", "rtk", "graphify", "shux"})
+            checker = lambda url, **kwargs: (True, {"data": [{"id": "auto"}]})
+
+            state = BootstrapRunner(
+                root,
+                runner=runner,
+                checker=checker,
+                sleep=lambda _: None,
+                home=home,
+            ).bootstrap()
+
+            for name in ("superpowers", "vv-harness", "security-hooks", "superharness", "codex-subagents"):
+                self.assertEqual(state["components"][name]["status"], "VERIFIED", name)
+            self.assertEqual(state["final_gate"]["status"], "VERIFIED")
+            mcp_commands = [entry["argv"] for entry in state["components"]["codex-subagents"]["commands"]]
+            self.assertIn(["claude", "mcp", "list"], mcp_commands)
+
+    def test_codex_host_does_not_fake_claude_only_components(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_workspace(root)
+            runner = FakeRunner({"codex", "headroom", "omniroute", "rtk", "graphify", "shux"})
+            checker = lambda url, **kwargs: (True, {"data": [{"id": "auto"}]})
+
+            state = BootstrapRunner(root, runner=runner, checker=checker, sleep=lambda _: None).bootstrap()
+
+            self.assertEqual(state["components"]["superpowers"]["status"], "VERIFIED")
+            for name in ("vv-harness", "security-hooks", "codex-subagents"):
+                self.assertEqual(state["components"][name]["status"], "BLOCKED", name)
+            self.assertEqual(state["final_gate"]["status"], "BLOCKED")
 
     def test_missing_installers_are_explicitly_blocked(self):
         with tempfile.TemporaryDirectory() as tmp:
