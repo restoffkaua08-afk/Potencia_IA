@@ -246,6 +246,7 @@ class BootstrapRunner:
         if not self.runner.which("omniroute"):
             self._set("omniroute", BLOCKED, "BLOCKED", evidence=evidence, error="omniroute unavailable after automatic install")
             return
+
         endpoint = "http://127.0.0.1:20128"
         healthy, response = self.checker(endpoint + "/v1/models")
         evidence.append({"url": endpoint + "/v1/models", "ok": healthy, "response": response})
@@ -263,9 +264,32 @@ class BootstrapRunner:
                 if healthy:
                     break
             evidence.append({"url": endpoint + "/v1/models", "ok": healthy, "response": response})
+
         data = response.get("data") if isinstance(response, dict) else None
         healthy = healthy and (data is None or isinstance(data, list))
-        self._set("omniroute", VERIFIED if healthy else BLOCKED, "VERIFIED" if healthy else BLOCKED, evidence=evidence, endpoint=endpoint, pid=pid, error=None if healthy else "OmniRoute did not expose a healthy local models endpoint")
+        if healthy:
+            routed, routed_response = self.checker(
+                endpoint + "/v1/chat/completions",
+                method="POST",
+                body={"model": "auto", "messages": [{"role": "user", "content": "Reply with OK"}], "max_tokens": 1},
+            )
+            evidence.append({"url": endpoint + "/v1/chat/completions", "ok": routed, "response": routed_response})
+            healthy = routed
+
+        host_commands: list[list[str]] = []
+        if self.host["claude"]:
+            host_commands.extend([
+                ["omniroute", "setup-claude"],
+                ["claude", "mcp", "add-server", "omniroute", "--type", "http", "--url", endpoint + "/api/mcp/stream"],
+            ])
+        if self.host["codex"]:
+            host_commands.append(["omniroute", "setup-codex"])
+        for argv in host_commands:
+            result = self._run("omniroute", argv, timeout=300)
+            evidence.append({"command": argv, "ok": result.ok, "returncode": result.returncode})
+            healthy = healthy and result.ok
+
+        self._set("omniroute", VERIFIED if healthy else BLOCKED, "VERIFIED" if healthy else "BLOCKED", evidence=evidence, endpoint=endpoint, pid=pid, error=None if healthy else "OmniRoute did not route a verified request or configure the detected host")
 
     def _rtk(self) -> None:
         evidence: list[Any] = []
