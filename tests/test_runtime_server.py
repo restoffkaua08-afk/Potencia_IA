@@ -87,6 +87,47 @@ class RuntimeServerTests(unittest.TestCase):
                 server.shutdown()
                 thread.join(timeout=2)
 
+    def test_sse_receives_broadcast_event(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            server = RuntimeServer(Path(tmp), port=0)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            connection = HTTPConnection("127.0.0.1", server.httpd.server_port, timeout=2)
+            try:
+                connection.request("GET", "/v1/events", headers={
+                    "Authorization": f"Bearer {server.token}",
+                    "Accept": "text/event-stream",
+                })
+                response = connection.getresponse()
+                self.assertEqual(response.status, 200)
+                first = response.readline()
+                while first and first.strip() != b"event: snapshot":
+                    first = response.readline()
+                self.assertEqual(first.strip(), b"event: snapshot")
+                while response.readline().strip() != b"":
+                    pass
+
+                event = server.execute_command({
+                    "command": "agent.upsert",
+                    "item": {"id": "sse-agent", "name": "SSE Agent"},
+                })["event"]
+
+                lines = []
+                while True:
+                    line = response.readline()
+                    if not line:
+                        break
+                    lines.append(line)
+                    if line.strip() == b"" and any(b"event: agent_upsert_changed" in item for item in lines):
+                        break
+
+                self.assertTrue(any(b"event: agent_upsert_changed" in item for item in lines))
+                self.assertTrue(any(event["id"].encode() in item for item in lines))
+            finally:
+                connection.close()
+                server.shutdown()
+                thread.join(timeout=2)
+
     def test_sse_starts_with_snapshot_frame(self):
         with tempfile.TemporaryDirectory() as tmp:
             server = RuntimeServer(Path(tmp), port=0)
