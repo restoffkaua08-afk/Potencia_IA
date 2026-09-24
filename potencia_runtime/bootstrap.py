@@ -337,33 +337,50 @@ class BootstrapRunner:
         return False
 
     def _host_plugins(self) -> None:
-        if not self.host["claude"]:
-            reason = "Claude Code CLI was not detected; native Claude plugins cannot be verified"
-            for name in ("superpowers", "vv-harness", "security-hooks"):
-                self._set(name, BLOCKED, "BLOCKED", evidence=[{"host": "claude", "detected": False}], error=reason)
+        if self.host["claude"]:
+            plugins = (
+                ("superpowers", "obra/superpowers-marketplace", "superpowers@superpowers-marketplace"),
+                ("vv-harness", "oeftimie/vv-claude-harness", "vv-harness"),
+                ("security-hooks", "atompilot/claude-code-security-hooks", "security-hooks@atompilot-security-hooks"),
+                ("superharness-plugin", "artificemachine/superharness", "superharness"),
+            )
+            for name, marketplace, plugin in plugins:
+                component = "superharness" if name == "superharness-plugin" else name
+                evidence: list[Any] = []
+                add = self._run(component, ["claude", "plugin", "marketplace", "add", marketplace], timeout=180)
+                install = self._run(component, ["claude", "plugin", "install", plugin, "--scope", "user"], timeout=300)
+                evidence.extend([
+                    {"command": add.argv, "ok": add.ok, "returncode": add.returncode},
+                    {"command": install.argv, "ok": install.ok, "returncode": install.returncode},
+                    {"plugin": plugin, "registry_verified": self._claude_plugin_present(plugin)},
+                ])
+                ok = install.ok and evidence[-1]["registry_verified"]
+                if component not in self.components or self.components[component]["status"] != VERIFIED:
+                    self._set(component, VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else f"Claude plugin {plugin} was not verified in the installed plugin registry")
             return
 
-        plugins = (
-            ("superpowers", "obra/superpowers-marketplace", "superpowers@superpowers-marketplace"),
-            ("vv-harness", "oeftimie/vv-claude-harness", "vv-harness"),
-            ("security-hooks", "atompilot/claude-code-security-hooks", "security-hooks@atompilot-security-hooks"),
-            ("superharness-plugin", "artificemachine/superharness", "superharness"),
-        )
-        for name, marketplace, plugin in plugins:
-            component = "superharness" if name == "superharness-plugin" else name
+        if self.host["codex"]:
             evidence: list[Any] = []
-            add = self._run(component, ["claude", "plugin", "marketplace", "add", marketplace], timeout=180)
-            install = self._run(component, ["claude", "plugin", "install", plugin, "--scope", "user"], timeout=300)
+            add = self._run("superpowers", ["codex", "plugin", "marketplace", "add", "obra/superpowers-marketplace"], timeout=180)
+            install = self._run("superpowers", ["codex", "plugin", "add", "superpowers@superpowers-marketplace"], timeout=300)
+            listing = self._run("superpowers", ["codex", "plugin", "list"], timeout=60)
             evidence.extend([
                 {"command": add.argv, "ok": add.ok, "returncode": add.returncode},
                 {"command": install.argv, "ok": install.ok, "returncode": install.returncode},
-                {"plugin": plugin, "registry_verified": self._claude_plugin_present(plugin)},
+                {"command": listing.argv, "ok": listing.ok, "contains_superpowers": "superpowers" in (listing.stdout + listing.stderr).lower()},
             ])
-            ok = install.ok and evidence[-1]["registry_verified"]
-            if component not in self.components or self.components[component]["status"] != VERIFIED:
-                self._set(component, VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else f"Claude plugin {plugin} was not verified in the installed plugin registry")
-        if "superharness" in self.components and self.components["superharness"]["status"] != VERIFIED:
-            self._set("superharness", BLOCKED, "BLOCKED", evidence=self.components["superharness"].get("evidence", []), error="Superharness CLI and Claude plugin were not both verified")
+            ok = install.ok and listing.ok and evidence[-1]["contains_superpowers"]
+            self._set("superpowers", VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else "Codex Superpowers plugin was not verified by codex plugin list")
+            for name, reason in (
+                ("vv-harness", "VV Harness has no verified Codex-native installation path"),
+                ("security-hooks", "Security Hooks have no verified Codex-native installation path"),
+            ):
+                self._set(name, BLOCKED, "BLOCKED", evidence=[{"host": "codex", "supported": False}], error=reason)
+            return
+
+        reason = "Neither Claude Code nor Codex CLI was detected; host integration cannot be verified"
+        for name in ("superpowers", "vv-harness", "security-hooks"):
+            self._set(name, BLOCKED, "BLOCKED", evidence=[{"host": "unknown", "detected": False}], error=reason)
 
     def _codex_subagents(self) -> None:
         if not self.host["claude"]:
