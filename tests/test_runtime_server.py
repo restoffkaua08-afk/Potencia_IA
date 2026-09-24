@@ -87,6 +87,22 @@ class RuntimeServerTests(unittest.TestCase):
                 with self.assertRaises(Exception):
                     urlopen(bad_request, timeout=2)
 
+                wrong_type = Request(
+                    f"http://127.0.0.1:{port}/v1/commands",
+                    data=json.dumps({"command": "ping"}).encode(),
+                    headers={**headers, "Content-Type": "text/plain"},
+                )
+                with self.assertRaises(Exception):
+                    urlopen(wrong_type, timeout=2)
+
+                empty_body = Request(
+                    f"http://127.0.0.1:{port}/v1/commands",
+                    data=b"",
+                    headers={**headers, "Content-Type": "application/json"},
+                )
+                with self.assertRaises(Exception):
+                    urlopen(empty_body, timeout=2)
+
             finally:
                 server.shutdown()
                 thread.join(timeout=2)
