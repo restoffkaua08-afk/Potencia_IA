@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import secrets
@@ -69,7 +70,7 @@ class RuntimeServer:
                 return
 
             def _authorized(self) -> bool:
-                return self.headers.get(TOKEN_HEADER, "") == f"Bearer {server.token}"
+                return hmac.compare_digest(self.headers.get(TOKEN_HEADER, ""), f"Bearer {server.token}")
 
             def _json(self, status: int, body: dict[str, Any]) -> None:
                 raw = json.dumps(body, ensure_ascii=False).encode("utf-8")
@@ -111,7 +112,7 @@ class RuntimeServer:
                         self.wfile.flush()
                         while True:
                             time.sleep(15)
-                            self.wfile.write(b": heartbeat\\n\\n")
+                            self.wfile.write(b": heartbeat\n\n")
                             self.wfile.flush()
                     except (BrokenPipeError, ConnectionResetError, OSError):
                         pass
