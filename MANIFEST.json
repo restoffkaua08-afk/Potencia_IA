@@ -6,7 +6,6 @@
   "runtime": {
     "package": "potencia_runtime",
     "protocol_version": "1",
-    "desktop_protocol": "docs/DESKTOP-PROTOCOL.md",
     "default_port": 43173,
     "bind": "127.0.0.1"
   },
