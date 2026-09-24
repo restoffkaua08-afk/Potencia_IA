@@ -75,7 +75,7 @@ Quando o usuário pedir para executar, ativar, instalar ou configurar o Potencia
 
 ### Fase A — Bootstrap
 
-Instale, configure, ative e verifique tudo que for aplicável:
+Na primeira execução, instale, configure, ative e verifique automaticamente todos os componentes definidos no MANIFEST.json. Nenhum componente configurado é opcional: a aplicabilidade decide como ele será usado na tarefa, não se ele será instalado, ativado ou deixado disponível:
 - projetos/agentes externos;
 - plugins;
 - skills;
@@ -102,7 +102,7 @@ Também deve:
 ### Fase B — Armamento operacional
 
 Somente depois do bootstrap verificado:
-- carregar/ativar as skills aplicáveis;
+- carregar/ativar todas as skills, plugins, hooks e agentes configurados;
 - conhecer as regras dos agentes/projetos;
 - preparar o loop obrigatório;
 - deixar as ferramentas disponíveis para o projeto do usuário.
@@ -116,20 +116,20 @@ Somente depois do bootstrap verificado:
 Depois do bootstrap, os componentes do Potencia tornam-se parte da infraestrutura padrão do trabalho.
 
 Para cada projeto do usuário, use:
-- skills do Potencia quando aplicáveis;
-- agentes/projetos configurados quando apropriados;
-- plugins configurados quando disponíveis;
-- Graphify para compreensão estrutural quando aplicável;
-- RTK/Headroom quando disponíveis e benéficos;
-- harness/orquestração em tarefas longas e paralelizáveis;
-- revisão independente quando disponível;
-- Security Hooks como camada de proteção;
-- Emil, Impeccable e Taste em trabalho de interface quando aplicáveis;
-- Task Observer somente dentro do laboratório permitido.
+- todas as skills do Potencia ficam disponíveis desde o início;
+- todos os agentes/projetos configurados ficam prontos para delegação;
+- todos os plugins e hooks configurados ficam ativos;
+- Graphify fica disponível para compreensão estrutural;
+- RTK e Headroom ficam ligados ao fluxo de ferramentas e contexto;
+- OmniRoute fica ativo como gateway local com roteamento automático;
+- harness/orquestração e revisão independente ficam prontos para toda tarefa;
+- Security Hooks permanecem ativos;
+- Emil, Impeccable e Taste ficam carregados como capacidades de sessão;
+- Task Observer permanece ativo somente no laboratório permitido.
 
 Não faça execução monolítica por conveniência quando existir componente configurado e adequado.
 
-Se um componente não puder ser usado, registre por quê e qual alternativa verificável foi usada.
+Se um componente não puder ser usado no host, registre BLOCKED, o motivo exato, a tentativa realizada e a alternativa verificável. Não trate a indisponibilidade como opção silenciosa.
 
 ---
 
@@ -333,13 +333,13 @@ Nunca coloque tokens, API keys, senhas ou credenciais nesse arquivo ou no reposi
 ## 11. Conclusão do bootstrap
 
 Só considere o Potencia operacional quando:
-1. todos os componentes aplicáveis foram processados;
-2. instalações necessárias foram feitas;
-3. ativações/configurações aplicáveis foram feitas;
-4. skills foram lidas e carregadas conforme necessário;
-5. agentes/projetos aplicáveis estão disponíveis;
-6. plugins aplicáveis estão disponíveis;
-7. otimizações de contexto/tokens aplicáveis foram verificadas;
+1. todos os componentes configurados foram processados;
+2. todas as instalações necessárias foram feitas;
+3. todas as ativações e configurações foram feitas;
+4. todas as skills foram lidas, carregadas e descobertas;
+5. todos os agentes e projetos configurados estão disponíveis;
+6. todos os plugins e hooks configurados estão ativos;
+7. otimização de contexto, tokens e roteamento foram verificadas;
 8. testes de saúde passaram ou cada bloqueio foi explicitamente classificado;
 9. o estado foi registrado;
 10. não existe pendência essencial silenciosa.

@@ -2,41 +2,30 @@
 
 | Component | Source | Install/activation | Health check | Required |
 |---|---|---|---|---|
-| Superpowers | obra/superpowers | Claude Code official marketplace | commands/skills visible | YES |
+| Superpowers | obra/superpowers | native plugin for Claude Code/Codex | skills and session hook visible | YES |
 | Graphify | Graphify-Labs/graphify | uv tool install graphifyy + graphify install | help + graph smoke test | YES |
-| RTK | rtk-ai/rtk | OS package/install + rtk init | rtk --version + rtk gain | YES |
-| VV Harness | oefimie/vv-claude-harness | native Claude plugin | harness doctor / plugin discovery | YES |
+| RTK | rtk-ai/rtk | official OS install + global auto-patch | rtk --version + rtk gain + hook check | YES |
+| VV Harness | oefimie/vv-claude-harness | native Claude plugin | plugin discovery + harness doctor | YES |
 | Security Hooks | atompilot/claude-code-security-hooks | native Claude plugin | hook registration + controlled test | YES |
-| Superharness | artificemachine/superharness | pipx install superharness | shux status | YES |
-| Codex Subagents | mgoulart/codex-subagents | official install.sh after inspection | MCP + command discovery | CONDITIONAL |
-| OmniRoute | see plugin contract | selected implementation + provider configuration | local health/API check | CONDITIONAL |
-| Headroom | see plugin contract | selected implementation | context/tool integrity benchmark | CONDITIONAL |
-| Task Observer | see plugin contract | Claude skill + structural trigger | observation workspace activity | YES |
-| Emil | emilkowalski/skills | current upstream skill install | skill discovery | CONDITIONAL |
-| Impeccable | pbakaus/impeccable | current upstream skill install | skill discovery | CONDITIONAL |
-| Taste | selected source in skill contract | current upstream skill install | skill discovery | CONDITIONAL |
+| Superharness | artificemachine/superharness | pipx install + onboarding/guardian | shux status | YES |
+| Codex Subagents | mgoulart/codex-subagents | official install + MCP registration | command and MCP discovery | YES |
+| OmniRoute | crl33/omniroute | global install + persistent local auto gateway | health + automatic route smoke test | YES |
+| Headroom | headroomlabs-ai/headroom | persistent service + MCP wiring for detected agents | health + response-integrity smoke test | YES |
+| Task Observer | rebelytics/one-skill-to-rule-them-all | skill install + structural trigger | isolated observation workspace | YES |
+| Emil | emilkowalski/skills | upstream skill install | skill discovery | YES |
+| Impeccable | pbakaus/impeccable | upstream skill install | skill discovery | YES |
+| Taste | source declared by skill contract | upstream skill install | skill discovery | YES |
 
-## Required vs conditional
+## Activation rule
 
-YES means the bootstrap must attempt installation/activation.
+All listed components are installed, configured, activated and verified during Potencia bootstrap. The user does not need to call or configure components individually.
 
-CONDITIONAL means the bootstrap must inspect whether the component applies to the current environment/workflow. It must not be silently ignored.
+“Required” means the bootstrap must perform the work and record evidence. If the host lacks a capability, the result is BLOCKED with the exact reason and attempted alternative; it is never silently treated as optional.
 
-Examples:
-- Codex Subagents is conditional if Codex CLI is unavailable.
-- frontend design skills are conditional for non-frontend projects.
-- OmniRoute/Headroom are conditional if the user is not using their routing/context path.
-
-Conditional does not mean skip reading. The agent must understand the component before deciding.
+Task relevance controls which component behavior is applied to a task. It does not disable the component, remove it from the session, or defer activation until the user asks for it.
 
 ## Evidence levels
 
-READ
-INSTALLED
-CONFIGURED
-ACTIVE
-VERIFIED
-BLOCKED
-NOT_APPLICABLE
+READ → INSTALLED → CONFIGURED → ACTIVE → VERIFIED
 
-Never collapse these states.
+Never collapse these states and never claim activation from documentation alone.

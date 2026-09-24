@@ -2,54 +2,35 @@
 
 ## Papel
 
-Gateway/router de modelos e provedores para Claude Code, Codex e outras ferramentas.
+Gateway obrigatório de modelos e provedores para Claude Code, Codex e outras ferramentas. Ele fornece uma rota local automática, fallback e telemetria de uso.
 
 ## Fonte selecionada
 
-Implementação selecionada para o Potencia:
 https://github.com/crl33/omniroute
 
-O nome OmniRoute possui múltiplas implementações/forks. Não substitua esta fonte silenciosamente por outra.
+Não substitua esta fonte silenciosamente por outro fork.
 
-## Instalação
+## Ativação automática obrigatória
 
-A implementação selecionada documenta instalação via npm:
+O bootstrap deve instalar, iniciar e verificar o OmniRoute sem exigir que o usuário faça configuração manual:
 
-npm install -g omniroute
+    npm install -g omniroute
+    omniroute
 
-Depois:
+O serviço local deve permanecer ativo em http://127.0.0.1:20128. A rota padrão é auto, usando os provedores gratuitos/sem credencial disponíveis no ambiente. O bootstrap deve testar:
 
-omniroute
+- GET /v1/models;
+- uma chamada mínima com o modelo auto;
+- roteamento da sessão detectada de Claude Code ou Codex pelo endpoint local.
 
-A instalação deve ser verificada antes de configurar qualquer cliente.
+Quando o host oferecer uma integração oficial, o Potencia deve usar o launcher/configuração oficial do OmniRoute para iniciar o agente já conectado ao gateway, sem pedir ao usuário para chamar outro comando.
 
-## Ativação
+## Credenciais e provedores
 
-O uso pode ser feito por launcher/configuração própria do OmniRoute. Nunca grave API keys no Potencia.
+O baseline automático não deve exigir chave nova. Credenciais existentes do usuário podem ser preservadas para ampliar os provedores e os fallbacks, mas nunca podem ser inventadas, expostas, gravadas no repositório ou solicitadas sem necessidade.
 
-Antes de alterar ANTHROPIC_BASE_URL, OPENAI_BASE_URL ou configurações equivalentes:
-1. verificar se o servidor está saudável;
-2. confirmar o endpoint;
-3. confirmar que existe pelo menos um provedor autorizado;
-4. testar um modelo;
-5. preservar uma forma de retornar ao endpoint direto.
-
-## Verificação
-
-Confirmar:
-- comando omniroute disponível;
-- servidor responde;
-- endpoint de modelos responde;
-- autenticação funciona;
-- Claude Code/Codex conseguem completar uma chamada de teste quando configurados.
-
-## Regra importante
-
-OmniRoute é uma camada de roteamento. Ele não transforma uma cota/assinatura de um provedor em outra cota. Qualquer fallback depende dos provedores e credenciais realmente configurados.
+Se nenhuma rota automática saudável estiver disponível, registrar BLOCKED com a resposta de saúde e a alternativa tentada. Não fingir que o gateway está ativo.
 
 ## Segurança
 
 Não colocar API keys, tokens, cookies, credenciais ou URLs privadas com segredo em arquivos do Potencia ou commits.
-
-Fonte:
-https://github.com/crl33/omniroute

@@ -52,7 +52,7 @@ Read in order:
 5. MANIFEST.json
 6. this file
 7. bootstrap/COMPONENT-MATRIX.md
-8. all applicable component contracts.
+8. all component contracts. Applicability changes how a component is used, not whether it is installed or activated.
 
 Read enough of external project documentation to understand the current installation and verification procedure before executing it.
 
@@ -164,9 +164,9 @@ The selected implementation is pinned in plugins/omni-route.md.
 
 Do not silently substitute a similarly named fork.
 
-Because OmniRoute can alter model endpoints and provider routing, treat provider credentials and routing policy as a separate configuration step.
+Install and start OmniRoute automatically as a persistent local gateway. Use its automatic/auto route as the default so the baseline works without asking the user for provider credentials. Configure detected Claude Code and Codex sessions through the supported OmniRoute launch/configuration path and verify the local API before continuing.
 
-Verify health before wiring Claude Code to it.
+Provider credentials supplied by the user may be preserved, but Potencia must never invent, requestlessly expose, or commit credentials. If the automatic route cannot serve a verified request, mark the integration BLOCKED instead of silently skipping it.
 
 Never put API keys in Potencia files or Git.
 
@@ -174,9 +174,9 @@ Never put API keys in Potencia files or Git.
 
 The selected implementation is pinned in plugins/headroom.md.
 
-Headroom is a context-management layer. Measure it before and after enabling it.
+Install Headroom automatically, register its MCP integration with every detected supported agent, and apply a persistent service with all detected providers. Start it before the user work begins, verify health, and keep it active for the whole session.
 
-Do not assume it improves every workload. If it increases context/tool overhead or harms reliability, keep it installed but do not force it into the active path.
+The bootstrap owns the setup; the user must not need to call Headroom, wrap the agent, or configure MCP manually. If health or response-integrity verification fails, mark the component BLOCKED and report the exact failure.
 
 ### Task Observer
 
@@ -190,13 +190,9 @@ It must never autonomously rewrite Potencia production contracts.
 
 ## Phase 4 — Design skills
 
-For frontend work, Potencia includes contracts for Emil, Impeccable, and Taste.
+Potencia includes Emil, Impeccable, and Taste as active session capabilities. The bootstrap must install their actual implementations from the declared sources, load them into the detected agent environments, and verify discovery during the Final Gate.
 
-The bootstrap must make actual skill implementations available when the source/install method is defined in their contract.
-
-Do not claim that a local SKILL.md contract is the complete upstream implementation.
-
-When the selected skill is external, read its current upstream license and installation instructions before installing.
+Task type changes when a design skill contributes behavior; it does not make installation or activation optional. Do not claim that a local SKILL.md contract is the complete upstream implementation. When a skill is external, read its current upstream license and installation instructions before installing.
 
 ## Phase 5 — Persistent state
 
@@ -230,16 +226,18 @@ Active without a successful health check is not VERIFIED.
 
 Before success, run a small controlled task that exercises the infrastructure without modifying the user's real project unnecessarily.
 
-Where applicable demonstrate:
-- a Potencia skill loads;
-- an external agent/project is available;
+Demonstrate all configured components:
+- Potencia skills load;
+- external projects and plugins are available;
 - Graphify can inspect code;
-- RTK can process a supported command;
-- the harness can report status;
+- RTK processes a supported command;
+- Headroom is healthy and preserves tool results;
+- OmniRoute serves an automatic route;
+- the harness reports status;
 - security hooks are active;
-- Codex delegation works when configured;
-- context optimization does not corrupt tool results;
-- Task Observer can create/read workspace state.
+- Codex delegation works when Codex is present;
+- Task Observer can create/read isolated workspace state.
+A missing host capability is a BLOCKED result with evidence, never a silent optional skip.
 
 ## Phase 8 — Final gate
 
@@ -255,7 +253,7 @@ Antes do Final Gate, faça uma checagem anti-falso-positivo:
 O agente não deve encerrar o bootstrap para perguntar pela missão do usuário. O único encerramento normal após `execute` é o sucesso do Final Gate ou um bloqueio real que exija ação humana.
 
 
-Bootstrap succeeds only when all required components are VERIFIED, optional components are explicitly VERIFIED/NOT_APPLICABLE/BLOCKED with a reason, no essential human action is pending, runtime state is written, and Claude Code can continue into user work without another setup phase.
+Bootstrap succeeds only when every configured component is VERIFIED, no component was silently skipped, no essential human action is pending, runtime state is written, and Claude Code or Codex can continue into user work without another setup phase.
 
 Then, and only then, output exactly:
 
