@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/LICENSE-MIT-19B394?style=for-the-badge)](LICENSE)
 ![Status](https://img.shields.io/badge/STATUS-SELF%20BOOTSTRAPPING-00A7E1?style=for-the-badge&labelColor=071A2B)
 ![Método](https://img.shields.io/badge/M%C3%89TODO-MULTIAGENTE-19B394?style=for-the-badge&labelColor=071A2B)
-![Foco](https://img.shields.io/badge/FOCO-CLAUDE%20CODE-7C3AED?style=for-the-badge&labelColor=071A2B)
+![Agentes](https://img.shields.io/badge/AGENTES-CLAUDE%20CODE%20%2B%20CODEX-7C3AED?style=for-the-badge&labelColor=071A2B)
 [![CI](https://github.com/restoffkaua08-afk/Potencia_IA/actions/workflows/validate.yml/badge.svg)](https://github.com/restoffkaua08-afk/Potencia_IA/actions/workflows/validate.yml)
 
 <br>
@@ -245,20 +245,44 @@ As fontes e contratos de integração ficam documentados no próprio repositóri
 
 O Runtime possui pacote instalável, CLI, persistência local, API HTTP autenticada, SSE, comandos estruturados, diagnóstico local e testes automatizados.
 
-### Instalação
+### Instalação para agentes de terminal
+
+O Potencia é distribuído como repositório e pode ser entregue diretamente a um agente de terminal. Não é necessário Desktop.
+
+#### Claude Code
+
+```powershell
+git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
+cd Potencia_IA
+```
+
+No Claude Code, peça para executar, ativar ou fazer o bootstrap do Potencia. O contrato em CLAUDE.md conduz a instalação, configuração e verificação.
+
+#### Codex
+
+```powershell
+git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
+cd Potencia_IA
+```
+
+O arquivo AGENTS.md fornece o contrato de integração do Potencia para o Codex e encaminha o agente para o mesmo bootstrap operacional.
+
+#### Runtime opcional
+
+Quando o projeto precisar do Runtime local, instale o pacote:
 
 ```powershell
 py -m pip install git+https://github.com/restoffkaua08-afk/Potencia_IA.git
 ```
 
-Depois valide a instalação:
+Depois valide:
 
 ```powershell
 potencia --version
 potencia doctor --workspace "C:\caminho\do\projeto"
 ```
 
-Para iniciar o Runtime:
+Para iniciar:
 
 ```powershell
 potencia runtime --workspace "C:\caminho\do\projeto"
@@ -268,9 +292,7 @@ O Runtime escuta somente em `127.0.0.1` por padrão e usa um token local para as
 
 ### Produto
 
-O repositório é a camada de infraestrutura. O **Potencia Desktop** é a interface gráfica separada e compatível com o protocolo do Runtime.
-
-O ciclo de entrega é validado automaticamente por CI, incluindo instalação do pacote, testes do Runtime, validação da CLI e arquivos públicos do projeto.
+O repositório é a camada de infraestrutura. O ciclo de entrega é validado automaticamente por CI, incluindo instalação do pacote, testes do Runtime, validação da CLI e arquivos públicos do projeto. O produto é independente de interface gráfica.
 
 Se este projeto fizer sentido para você, acompanhar o repositório e participar das discussões é a melhor forma de acompanhar sua evolução.
 
