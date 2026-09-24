@@ -16,12 +16,18 @@ O bootstrap deve instalar, iniciar e verificar o OmniRoute sem exigir que o usu�
 
     npm install -g omniroute
     omniroute
+    omniroute setup-claude        # quando Claude Code existir
+    omniroute setup-codex         # quando Codex existir
 
 O serviço local deve permanecer ativo em http://127.0.0.1:20128. A rota padrão é auto, usando os provedores gratuitos/sem credencial disponíveis no ambiente. O bootstrap deve testar:
 
 - GET /v1/models;
 - uma chamada mínima com o modelo auto;
-- roteamento da sessão detectada de Claude Code ou Codex pelo endpoint local.
+- `omniroute setup-claude` e/ou `omniroute setup-codex` quando o host existir;
+- MCP do OmniRoute no Claude Code;
+- roteamento da sessão detectada pelo endpoint local.
+
+A sessão não é declarada ativa só porque o processo abriu a porta: a chamada mínima precisa responder e a configuração do host precisa ser verificada.
 
 Quando o host oferecer uma integração oficial, o Potencia deve usar o launcher/configuração oficial do OmniRoute para iniciar o agente já conectado ao gateway, sem pedir ao usuário para chamar outro comando.
 
