@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "potencia-ia"
+version = "0.3.0"
+description = "Potencia Runtime and reusable AI coding-agent infrastructure"
+requires-python = ">=3.12"
+
+[project.scripts]
+potencia = "potencia_runtime.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["potencia_runtime*"]
