@@ -350,16 +350,16 @@ class BootstrapRunner:
             ("superharness-plugin", "artificemachine/superharness", "superharness"),
         )
         for name, marketplace, plugin in plugins:
+            component = "superharness" if name == "superharness-plugin" else name
             evidence: list[Any] = []
-            add = self._run("host-plugins", ["claude", "plugin", "marketplace", "add", marketplace], timeout=180)
-            install = self._run("host-plugins", ["claude", "plugin", "install", plugin, "--scope", "user"], timeout=300)
+            add = self._run(component, ["claude", "plugin", "marketplace", "add", marketplace], timeout=180)
+            install = self._run(component, ["claude", "plugin", "install", plugin, "--scope", "user"], timeout=300)
             evidence.extend([
                 {"command": add.argv, "ok": add.ok, "returncode": add.returncode},
                 {"command": install.argv, "ok": install.ok, "returncode": install.returncode},
                 {"plugin": plugin, "registry_verified": self._claude_plugin_present(plugin)},
             ])
             ok = install.ok and evidence[-1]["registry_verified"]
-            component = "superharness" if name == "superharness-plugin" else name
             if component not in self.components or self.components[component]["status"] != VERIFIED:
                 self._set(component, VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else f"Claude plugin {plugin} was not verified in the installed plugin registry")
         if "superharness" in self.components and self.components["superharness"]["status"] != VERIFIED:
@@ -373,7 +373,7 @@ class BootstrapRunner:
             argv = ["claude", "mcp", "add", "--scope", "user", "codex-subagent", "--transport", "stdio", "--", "uvx", "codex-as-mcp@latest"]
             result = self._run("codex-subagents", argv, timeout=180)
             evidence.append({"command": argv, "ok": result.ok, "returncode": result.returncode})
-            check = self._run("claude", "mcp list".split(), timeout=60)
+            check = self._run("codex-subagents", ["claude", "mcp", "list"], timeout=60)
             evidence.append({"command": check.argv, "ok": check.ok, "stdout": check.stdout})
             ok = result.ok and check.ok and "codex-subagent" in (check.stdout + check.stderr)
             self._set("codex-subagents", VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else "Codex Subagents MCP registration could not be verified")
