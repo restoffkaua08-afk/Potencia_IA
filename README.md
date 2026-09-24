@@ -241,7 +241,7 @@ As fontes e contratos de integração ficam documentados no próprio repositóri
 
 # `> STATUS`
 
-**Potencia IA 0.2.0**
+**Potencia IA 0.3.0**
 
 Projeto em evolução, desenvolvido para crescer com novos agentes, projetos, skills, harnesses e ferramentas.
 
