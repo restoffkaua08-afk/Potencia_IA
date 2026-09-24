@@ -179,6 +179,7 @@ class RuntimeServer:
             "project.upsert": "projects",
             "task.upsert": "tasks",
             "verification.upsert": "verifications",
+            "tool.upsert": "tools",
         }
         collection = collection_by_command.get(command)
         if collection:
