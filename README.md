@@ -265,7 +265,7 @@ git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
 cd Potencia_IA
 ```
 
-No Codex, execute o mesmo bootstrap real: python -m potencia_runtime bootstrap --workspace .. O arquivo AGENTS.md fornece o contrato de integração e exige que o estado seja VERIFIED antes do trabalho.
+No Codex, execute o mesmo bootstrap real: python -m potencia_runtime bootstrap --workspace . O arquivo AGENTS.md fornece o contrato de integração e exige que o estado seja VERIFIED antes do trabalho.
 
 #### Runtime opcional
 
