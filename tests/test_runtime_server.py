@@ -192,7 +192,7 @@ class RuntimeServerTests(unittest.TestCase):
                 self.assertEqual(response.status, 200)
                 self.assertEqual(response.getheader("Content-Type"), "text/event-stream; charset=utf-8")
                 chunk = response.read(64)
-                self.assertIn(b"event: snapshot\\n", chunk)
+                self.assertIn(b"event: snapshot\n", chunk)
                 self.assertIn(b"data: ", chunk)
             finally:
                 connection.close()
