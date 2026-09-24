@@ -238,11 +238,13 @@ class RuntimeServer:
                 self.clients[:] = [c for c in self.clients if c not in dead]
 
     def serve_forever(self) -> None:
-        self.stop_event.clear()
+        if self.stop_event.is_set():
+            return
         self.state.emit("runtime_connected", {"port": self.httpd.server_port})
         self.httpd.serve_forever()
 
     def shutdown(self) -> None:
         self.stop_event.set()
-        self.httpd.shutdown()
+        if not self.httpd._BaseServer__is_shut_down.is_set():
+            self.httpd.shutdown()
         self.httpd.server_close()
