@@ -1,6 +1,10 @@
+import json
 import tempfile
+import threading
 import unittest
+from http.client import HTTPConnection
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 from potencia_runtime.server import RuntimeServer
 
@@ -31,8 +35,79 @@ class RuntimeServerTests(unittest.TestCase):
                 self.assertIsNone(server.execute_command({"command": "shell.exec", "command_text": "dir"}))
                 with self.assertRaises(ValueError):
                     server.execute_command([])
+
             finally:
                 server.shutdown()
+
+    def test_http_auth_commands_and_state(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            server = RuntimeServer(Path(tmp), port=0)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                port = server.httpd.server_port
+
+                with urlopen(f"http://127.0.0.1:{port}/health", timeout=2) as response:
+                    health = json.loads(response.read())
+                self.assertTrue(health["ok"])
+                self.assertEqual(health["protocol_version"], "1")
+
+                with self.assertRaises(Exception):
+                    urlopen(f"http://127.0.0.1:{port}/v1/state", timeout=2)
+
+                headers = {"Authorization": f"Bearer {server.token}"}
+                request = Request(f"http://127.0.0.1:{port}/v1/state", headers=headers)
+                with urlopen(request, timeout=2) as response:
+                    state = json.loads(response.read())
+                self.assertEqual(state["protocol_version"], "1")
+
+                payload = json.dumps({
+                    "command": "agent.upsert",
+                    "item": {"id": "http-agent", "name": "HTTP Executor"},
+                }).encode()
+                request = Request(
+                    f"http://127.0.0.1:{port}/v1/commands",
+                    data=payload,
+                    headers={**headers, "Content-Type": "application/json"},
+                )
+                with urlopen(request, timeout=2) as response:
+                    result = json.loads(response.read())
+                self.assertTrue(result["ok"])
+                self.assertEqual(result["event"]["type"], "agent_upsert_changed")
+
+                bad_request = Request(
+                    f"http://127.0.0.1:{port}/v1/commands",
+                    data=b"[]",
+                    headers={**headers, "Content-Type": "application/json"},
+                )
+                with self.assertRaises(Exception):
+                    urlopen(bad_request, timeout=2)
+
+            finally:
+                server.shutdown()
+                thread.join(timeout=2)
+
+    def test_sse_starts_with_snapshot_frame(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            server = RuntimeServer(Path(tmp), port=0)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            connection = HTTPConnection("127.0.0.1", server.httpd.server_port, timeout=2)
+            try:
+                connection.request("GET", "/v1/events", headers={
+                    "Authorization": f"Bearer {server.token}",
+                    "Accept": "text/event-stream",
+                })
+                response = connection.getresponse()
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.getheader("Content-Type"), "text/event-stream; charset=utf-8")
+                chunk = response.read(64)
+                self.assertIn(b"event: snapshot\\n", chunk)
+                self.assertIn(b"data: ", chunk)
+            finally:
+                connection.close()
+                server.shutdown()
+                thread.join(timeout=2)
 
 
 if __name__ == "__main__":
