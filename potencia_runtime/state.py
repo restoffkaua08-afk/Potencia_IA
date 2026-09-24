@@ -35,16 +35,21 @@ class RuntimeState:
         self._state = self._load()
 
     def _load(self) -> dict[str, Any]:
+        base = default_state(self.workspace)
         try:
             data = json.loads(self.path.read_text(encoding="utf-8"))
-            if isinstance(data, dict):
-                data.setdefault("potencia_version", "0.3.0")
-                data.setdefault("protocol_version", "1")
-                data["workspace"] = str(self.workspace)
-                return data
         except (OSError, json.JSONDecodeError):
-            pass
-        return default_state(self.workspace)
+            return base
+
+        if not isinstance(data, dict):
+            return base
+
+        for key, default in base.items():
+            if key not in data or not isinstance(data[key], type(default)):
+                data[key] = default
+
+        data["workspace"] = str(self.workspace)
+        return data
 
     def snapshot(self) -> dict[str, Any]:
         with self._lock:
