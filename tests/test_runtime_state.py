@@ -14,6 +14,22 @@ class RuntimeStateTests(unittest.TestCase):
             self.assertEqual(snapshot["protocol_version"], "1")
             self.assertEqual(snapshot["workspace"], str(Path(tmp).resolve()))
 
+    def test_load_normalizes_missing_collections(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_dir = root / ".potencia"
+            state_dir.mkdir()
+            (state_dir / "runtime-state.json").write_text(
+                json.dumps({"agents": [{"id": "a1", "name": "Agent"}]}),
+                encoding="utf-8",
+            )
+            snapshot = RuntimeState(root).snapshot()
+            self.assertEqual(snapshot["agents"], [{"id": "a1", "name": "Agent"}])
+            self.assertEqual(snapshot["tasks"], [])
+            self.assertEqual(snapshot["events"], [])
+            self.assertEqual(snapshot["potencia_version"], "0.3.0")
+            self.assertEqual(snapshot["protocol_version"], "1")
+
     def test_update_persists_without_deadlock(self):
         with tempfile.TemporaryDirectory() as tmp:
             state = RuntimeState(Path(tmp))
