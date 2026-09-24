@@ -35,6 +35,10 @@ class RuntimeServerTests(unittest.TestCase):
                 self.assertIsNone(server.execute_command({"command": "shell.exec", "command_text": "dir"}))
                 with self.assertRaises(ValueError):
                     server.execute_command([])
+                with self.assertRaises(ValueError):
+                    server.execute_command({"command": "agent.upsert", "item": {"id": ""}})
+                with self.assertRaises(ValueError):
+                    server.execute_command({"command": "agent.upsert", "item": {"id": 123}})
 
             finally:
                 server.shutdown()
