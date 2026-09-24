@@ -243,7 +243,34 @@ As fontes e contratos de integração ficam documentados no próprio repositóri
 
 **Potencia IA 0.3.0**
 
-Projeto em evolução, desenvolvido para crescer com novos agentes, projetos, skills, harnesses e ferramentas.
+O Runtime possui pacote instalável, CLI, persistência local, API HTTP autenticada, SSE, comandos estruturados, diagnóstico local e testes automatizados.
+
+### Instalação
+
+```powershell
+py -m pip install git+https://github.com/restoffkaua08-afk/Potencia_IA.git
+```
+
+Depois valide a instalação:
+
+```powershell
+potencia --version
+potencia doctor --workspace "C:\caminho\do\projeto"
+```
+
+Para iniciar o Runtime:
+
+```powershell
+potencia runtime --workspace "C:\caminho\do\projeto"
+```
+
+O Runtime escuta somente em `127.0.0.1` por padrão e usa um token local para as rotas autenticadas.
+
+### Produto
+
+O repositório é a camada de infraestrutura. O **Potencia Desktop** é a interface gráfica separada e compatível com o protocolo do Runtime.
+
+O ciclo de entrega é validado automaticamente por CI, incluindo instalação do pacote, testes do Runtime, validação da CLI e arquivos públicos do projeto.
 
 Se este projeto fizer sentido para você, acompanhar o repositório e participar das discussões é a melhor forma de acompanhar sua evolução.
 
