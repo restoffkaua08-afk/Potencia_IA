@@ -241,9 +241,9 @@ As fontes e contratos de integração ficam documentados no próprio repositóri
 
 # `> STATUS`
 
-**Potencia IA 0.3.1**
+**Potencia IA 0.4.0**
 
-O Runtime possui pacote instalável, CLI, persistência local, API HTTP autenticada, SSE, comandos estruturados, diagnóstico local e testes automatizados.
+O Runtime possui pacote instalável, CLI, bootstrap executável, persistência local, API HTTP autenticada, SSE, comandos estruturados, diagnóstico local, Final Gate e testes automatizados.
 
 ### Instalação para agentes de terminal
 
@@ -256,7 +256,7 @@ git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
 cd Potencia_IA
 ```
 
-No Claude Code, peça para executar, ativar ou fazer o bootstrap do Potencia. O contrato em CLAUDE.md conduz a instalação, configuração e verificação.
+No Claude Code, execute o bootstrap real na raiz do projeto: python -m potencia_runtime bootstrap --workspace .. O contrato em CLAUDE.md conduz a instalação, configuração e verificação. O comando só retorna sucesso quando o Final Gate é VERIFIED.
 
 #### Codex
 
@@ -265,7 +265,7 @@ git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
 cd Potencia_IA
 ```
 
-O arquivo AGENTS.md fornece o contrato de integração do Potencia para o Codex e encaminha o agente para o mesmo bootstrap operacional.
+No Codex, execute o mesmo bootstrap real: python -m potencia_runtime bootstrap --workspace .. O arquivo AGENTS.md fornece o contrato de integração e exige que o estado seja VERIFIED antes do trabalho.
 
 #### Runtime opcional
 
