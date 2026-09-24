@@ -26,6 +26,16 @@ def redact(value: str) -> str:
     return re.sub(r"(?i)bearer\s+[A-Za-z0-9._-]+", "Bearer [REDACTED]", value)
 
 
+def redact_data(value: Any) -> Any:
+    if isinstance(value, str):
+        return redact(value)
+    if isinstance(value, dict):
+        return {str(key): redact_data(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [redact_data(item) for item in value]
+    return value
+
+
 @dataclass
 class CommandResult:
     argv: list[str]
@@ -126,8 +136,10 @@ class BootstrapRunner:
         runner: CommandRunner | None = None,
         checker: Callable[..., tuple[bool, dict[str, Any]]] = http_json,
         sleep: Callable[[float], None] = time.sleep,
+        home: Path | None = None,
     ):
         self.workspace = workspace.resolve()
+        self.home = (home or Path.home()).expanduser().resolve()
         self.potencia = self.workspace / ".potencia"
         self.state_path = self.potencia / "runtime-state.json"
         self.runner = runner or CommandRunner()
@@ -213,7 +225,21 @@ class BootstrapRunner:
     def _contracts(self) -> None:
         paths = ("CLAUDE.md", "AGENTS.md", "MANIFEST.json", "bootstrap/BOOTSTRAP.md", "bootstrap/AGENT-POLICY.md", "bootstrap/COMPONENT-MATRIX.md")
         missing = [path for path in paths if not (self.workspace / path).is_file()]
-        self._set("contracts", VERIFIED if not missing else BLOCKED, "VERIFIED" if not missing else BLOCKED, evidence=[{"path": p, "exists": p not in missing} for p in paths], error="missing: " + ", ".join(missing) if missing else None)
+        evidence: list[Any] = [{"path": path, "exists": path not in missing} for path in paths]
+        errors = ["missing: " + ", ".join(missing)] if missing else []
+        manifest_path = self.workspace / "MANIFEST.json"
+        if manifest_path.is_file():
+            try:
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                valid_manifest = isinstance(manifest, dict) and manifest.get("version") == VERSION
+                evidence.append({"manifest_version": manifest.get("version") if isinstance(manifest, dict) else None, "version_matches_runtime": valid_manifest})
+                if not valid_manifest:
+                    errors.append(f"MANIFEST.json version must match runtime {VERSION}")
+            except (OSError, json.JSONDecodeError) as exc:
+                evidence.append({"manifest_parse": False})
+                errors.append(f"MANIFEST.json is invalid: {exc}")
+        ok = not errors
+        self._set("contracts", VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error="; ".join(errors) if errors else None)
 
     def _local_skills(self) -> None:
         paths = (self.workspace / ".claude" / "skills", self.workspace / ".claude" / "agents", self.workspace / ".claude" / "commands")
@@ -249,7 +275,7 @@ class BootstrapRunner:
 
         endpoint = "http://127.0.0.1:20128"
         healthy, response = self.checker(endpoint + "/v1/models")
-        evidence.append({"url": endpoint + "/v1/models", "ok": healthy, "response": response})
+        evidence.append({"url": endpoint + "/v1/models", "ok": healthy, "response": redact_data(response)})
         pid = None
         if not healthy:
             try:
@@ -273,7 +299,7 @@ class BootstrapRunner:
                 method="POST",
                 body={"model": "auto", "messages": [{"role": "user", "content": "Reply with OK"}], "max_tokens": 1},
             )
-            evidence.append({"url": endpoint + "/v1/chat/completions", "ok": routed, "response": routed_response})
+            evidence.append({"url": endpoint + "/v1/chat/completions", "ok": routed, "response": redact_data(routed_response)})
             healthy = routed
 
         host_commands: list[list[str]] = []
@@ -342,7 +368,7 @@ class BootstrapRunner:
         self._set("superharness", VERIFIED if ok else BLOCKED, "VERIFIED" if ok else BLOCKED, evidence=evidence, error=None if ok else "superharness installation or doctor failed")
 
     def _claude_plugin_present(self, plugin_key: str) -> bool:
-        registry = Path.home() / ".claude" / "plugins" / "installed_plugins.json"
+        registry = self.home / ".claude" / "plugins" / "installed_plugins.json"
         try:
             data = json.loads(registry.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -378,9 +404,18 @@ class BootstrapRunner:
                     {"command": install.argv, "ok": install.ok, "returncode": install.returncode},
                     {"plugin": plugin, "registry_verified": self._claude_plugin_present(plugin)},
                 ])
-                ok = install.ok and evidence[-1]["registry_verified"]
-                if component not in self.components or self.components[component]["status"] != VERIFIED:
-                    self._set(component, VERIFIED if ok else BLOCKED, "VERIFIED" if ok else "BLOCKED", evidence=evidence, error=None if ok else f"Claude plugin {plugin} was not verified in the installed plugin registry")
+                registry_verified = evidence[-1]["registry_verified"]
+                cli_verified = self.components.get(component, {}).get("status") == VERIFIED
+                ok = install.ok and registry_verified and (cli_verified if component == "superharness" else True)
+                previous_evidence = self.components.get(component, {}).get("evidence", [])
+                combined_evidence = previous_evidence + evidence if component == "superharness" else evidence
+                self._set(
+                    component,
+                    VERIFIED if ok else BLOCKED,
+                    "VERIFIED" if ok else "BLOCKED",
+                    evidence=combined_evidence,
+                    error=None if ok else f"Claude plugin {plugin} or its executable was not verified",
+                )
             return
 
         if self.host["codex"]:
