@@ -4,6 +4,7 @@ import json
 import os
 import secrets
 import sys
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -41,6 +42,15 @@ def load_or_create_token() -> str:
     except OSError:
         pass
     return token
+
+
+def _merge_item(items: list[dict[str, Any]], item: dict[str, Any]) -> list[dict[str, Any]]:
+    item_id = item.get("id")
+    if not isinstance(item_id, str) or not item_id:
+        raise ValueError("item.id must be a non-empty string")
+    updated = [existing for existing in items if existing.get("id") != item_id]
+    updated.append(item)
+    return updated
 
 
 class RuntimeServer:
@@ -91,6 +101,7 @@ class RuntimeServer:
                     self.send_header("Content-Type", "text/event-stream; charset=utf-8")
                     self.send_header("Cache-Control", "no-cache")
                     self.send_header("Connection", "keep-alive")
+                    self.send_header("X-Accel-Buffering", "no")
                     self.end_headers()
                     with server.clients_lock:
                         server.clients.append(self)
@@ -99,8 +110,9 @@ class RuntimeServer:
                         self.wfile.write(f"event: snapshot\\ndata: {payload}\\n\\n".encode("utf-8"))
                         self.wfile.flush()
                         while True:
-                            if self.rfile.peek(1):
-                                break
+                            time.sleep(15)
+                            self.wfile.write(b": heartbeat\\n\\n")
+                            self.wfile.flush()
                     except (BrokenPipeError, ConnectionResetError, OSError):
                         pass
                     finally:
@@ -119,25 +131,74 @@ class RuntimeServer:
                     return
                 try:
                     length = int(self.headers.get("Content-Length", "0"))
+                    if length < 0 or length > 1_000_000:
+                        raise ValueError("invalid content length")
                     body = json.loads(self.rfile.read(length) or b"{}")
                 except (ValueError, json.JSONDecodeError):
                     self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_json"})
                     return
-                command = body.get("command")
-                if command == "ping":
-                    event = server.state.emit("runtime_ping", {"source": "desktop"})
-                    server.broadcast(event)
-                    self._json(HTTPStatus.OK, {"ok": True, "event": event})
+
+                try:
+                    result = server.execute_command(body)
+                except ValueError as exc:
+                    self._json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
                     return
-                if command == "refresh":
-                    snapshot = server.state.snapshot()
-                    event = server.state.emit("runtime_snapshot_refreshed", {"workspace": str(server.workspace)})
-                    server.broadcast(event)
-                    self._json(HTTPStatus.OK, {"ok": True, "snapshot": snapshot, "event": event})
+
+                if result is None:
+                    self._json(HTTPStatus.BAD_REQUEST, {"error": "unsupported_command"})
                     return
-                self._json(HTTPStatus.BAD_REQUEST, {"error": "unsupported_command"})
+                self._json(HTTPStatus.OK, {"ok": True, **result})
 
         self.httpd = ThreadingHTTPServer((host, port), Handler)
+        self.httpd.daemon_threads = True
+
+    def execute_command(self, body: dict[str, Any]) -> dict[str, Any] | None:
+        command = body.get("command")
+        if command == "ping":
+            event = self.state.emit("runtime_ping", {"source": "desktop"})
+            self.broadcast(event)
+            return {"event": event}
+
+        if command == "refresh":
+            snapshot = self.state.snapshot()
+            event = self.state.emit("runtime_snapshot_refreshed", {"workspace": str(self.workspace)})
+            self.broadcast(event)
+            return {"snapshot": snapshot, "event": event}
+
+        collection_by_command = {
+            "agent.upsert": "agents",
+            "skill.upsert": "activeSkills",
+            "plugin.upsert": "activePlugins",
+            "project.upsert": "projects",
+            "task.upsert": "tasks",
+            "verification.upsert": "verifications",
+        }
+        collection = collection_by_command.get(command)
+        if collection:
+            item = body.get("item")
+            if not isinstance(item, dict):
+                raise ValueError("item must be an object")
+            current = self.state.snapshot().get(collection, [])
+            if not isinstance(current, list):
+                raise ValueError(f"state collection {collection} is invalid")
+            updated = _merge_item([x for x in current if isinstance(x, dict)], item)
+            self.state.update({collection: updated})
+            event = self.state.emit(f"{command.replace('.', '_')}_changed", {"item": item})
+            self.broadcast(event)
+            return {"event": event}
+
+        if command == "agent.remove":
+            agent_id = body.get("id")
+            if not isinstance(agent_id, str) or not agent_id:
+                raise ValueError("id must be a non-empty string")
+            current = self.state.snapshot().get("agents", [])
+            updated = [x for x in current if isinstance(x, dict) and x.get("id") != agent_id]
+            self.state.update({"agents": updated})
+            event = self.state.emit("agent_removed", {"id": agent_id})
+            self.broadcast(event)
+            return {"event": event}
+
+        return None
 
     def broadcast(self, event: dict[str, Any]) -> None:
         raw = f"event: {event['type']}\\ndata: {json.dumps(event, ensure_ascii=False)}\\n\\n".encode("utf-8")
