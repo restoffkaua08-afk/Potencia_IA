@@ -6,6 +6,7 @@ import os
 import secrets
 import sys
 import time
+from threading import Event
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -61,6 +62,7 @@ class RuntimeServer:
         self.state = RuntimeState(self.workspace)
         self.clients: list[Any] = []
         self.clients_lock = Lock()
+        self.stop_event = Event()
         server = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -221,9 +223,11 @@ class RuntimeServer:
                 self.clients[:] = [c for c in self.clients if c not in dead]
 
     def serve_forever(self) -> None:
+        self.stop_event.clear()
         self.state.emit("runtime_connected", {"port": self.httpd.server_port})
         self.httpd.serve_forever()
 
     def shutdown(self) -> None:
+        self.stop_event.set()
         self.httpd.shutdown()
         self.httpd.server_close()
