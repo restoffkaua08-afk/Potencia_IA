@@ -112,10 +112,12 @@ class RuntimeServer:
                         payload = json.dumps(server.state.snapshot(), ensure_ascii=False)
                         self.wfile.write(f"event: snapshot\ndata: {payload}\n\n".encode("utf-8"))
                         self.wfile.flush()
-                        while True:
-                            time.sleep(15)
-                            self.wfile.write(b": heartbeat\n\n")
-                            self.wfile.flush()
+                        while not server.stop_event.wait(15):
+                            try:
+                                self.wfile.write(b": heartbeat\n\n")
+                                self.wfile.flush()
+                            except (BrokenPipeError, ConnectionResetError, OSError):
+                                break
                     except (BrokenPipeError, ConnectionResetError, OSError):
                         pass
                     finally:
@@ -195,14 +197,26 @@ class RuntimeServer:
             self.broadcast(event)
             return {"event": event}
 
-        if command == "agent.remove":
-            agent_id = body.get("id")
-            if not isinstance(agent_id, str) or not agent_id:
+        remove_collections = {
+            "agent.remove": "agents",
+            "skill.remove": "activeSkills",
+            "plugin.remove": "activePlugins",
+            "project.remove": "projects",
+            "task.remove": "tasks",
+            "verification.remove": "verifications",
+            "tool.remove": "tools",
+        }
+        collection = remove_collections.get(command)
+        if collection:
+            item_id = body.get("id")
+            if not isinstance(item_id, str) or not item_id:
                 raise ValueError("id must be a non-empty string")
-            current = self.state.snapshot().get("agents", [])
-            updated = [x for x in current if isinstance(x, dict) and x.get("id") != agent_id]
-            self.state.update({"agents": updated})
-            event = self.state.emit("agent_removed", {"id": agent_id})
+            current = self.state.snapshot().get(collection, [])
+            if not isinstance(current, list):
+                raise ValueError(f"state collection {collection} is invalid")
+            updated = [x for x in current if isinstance(x, dict) and x.get("id") != item_id]
+            self.state.update({collection: updated})
+            event = self.state.emit(f"{command.replace('.', '_')}_changed", {"id": item_id})
             self.broadcast(event)
             return {"event": event}
 
