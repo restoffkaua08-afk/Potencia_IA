@@ -29,12 +29,21 @@ class RuntimeServerTests(unittest.TestCase):
                 })
                 self.assertEqual(result["event"]["type"], "agent_upsert_changed")
                 self.assertEqual(server.state.snapshot()["agents"][0]["id"], "agent-1")
-                tool_result = server.execute_command({
-                    "command": "tool.upsert",
-                    "item": {"id": "tool-1", "name": "Runtime Tool", "status": "active"},
-                })
-                self.assertEqual(tool_result["event"]["type"], "tool_upsert_changed")
-                self.assertEqual(server.state.snapshot()["tools"][0]["id"], "tool-1")
+                upserts = [
+                    ("skill.upsert", "activeSkills", "skill-1", "skill_upsert_changed"),
+                    ("plugin.upsert", "activePlugins", "plugin-1", "plugin_upsert_changed"),
+                    ("project.upsert", "projects", "project-1", "project_upsert_changed"),
+                    ("task.upsert", "tasks", "task-1", "task_upsert_changed"),
+                    ("verification.upsert", "verifications", "verification-1", "verification_upsert_changed"),
+                    ("tool.upsert", "tools", "tool-1", "tool_upsert_changed"),
+                ]
+                for command, collection, item_id, event_type in upserts:
+                    result = server.execute_command({
+                        "command": command,
+                        "item": {"id": item_id, "name": item_id, "status": "active"},
+                    })
+                    self.assertEqual(result["event"]["type"], event_type)
+                    self.assertEqual(server.state.snapshot()[collection][0]["id"], item_id)
 
                 server.execute_command({"command": "agent.remove", "id": "agent-1"})
                 self.assertEqual(server.state.snapshot()["agents"], [])
