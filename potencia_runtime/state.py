@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from threading import Lock
 from time import time
+from uuid import uuid4
 from typing import Any
 
 
@@ -58,7 +59,7 @@ class RuntimeState:
 
     def emit(self, event_type: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
         event = {
-            "id": f"evt-{int(time() * 1000)}",
+            "id": f"evt-{uuid4().hex}",
             "type": event_type,
             "timestamp": time(),
             "payload": payload or {},
