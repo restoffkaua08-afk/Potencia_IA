@@ -29,6 +29,12 @@ class RuntimeServerTests(unittest.TestCase):
                 })
                 self.assertEqual(result["event"]["type"], "agent_upsert_changed")
                 self.assertEqual(server.state.snapshot()["agents"][0]["id"], "agent-1")
+                tool_result = server.execute_command({
+                    "command": "tool.upsert",
+                    "item": {"id": "tool-1", "name": "Runtime Tool", "status": "active"},
+                })
+                self.assertEqual(tool_result["event"]["type"], "tool_upsert_changed")
+                self.assertEqual(server.state.snapshot()["tools"][0]["id"], "tool-1")
 
                 server.execute_command({"command": "agent.remove", "id": "agent-1"})
                 self.assertEqual(server.state.snapshot()["agents"], [])
