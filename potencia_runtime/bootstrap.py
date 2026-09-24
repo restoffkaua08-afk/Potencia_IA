@@ -118,6 +118,10 @@ class BootstrapRunner:
     REQUIRED = (
         "contracts",
         "local-skills",
+        "task-observer",
+        "emil",
+        "impeccable",
+        "taste",
         "headroom",
         "omniroute",
         "rtk",
@@ -154,6 +158,7 @@ class BootstrapRunner:
         self.host = self._host()
         self._contracts()
         self._local_skills()
+        self._external_skills()
         self._headroom()
         self._omniroute()
         self._rtk()
@@ -195,6 +200,7 @@ class BootstrapRunner:
             "claude": bool(self.runner.which("claude")),
             "codex": bool(self.runner.which("codex")),
             "npm": bool(self.runner.which("npm")),
+            "npx": bool(self.runner.which("npx")),
             "uv": bool(self.runner.which("uv")),
             "pipx": bool(self.runner.which("pipx")),
             "cargo": bool(self.runner.which("cargo")),
@@ -246,6 +252,89 @@ class BootstrapRunner:
         evidence = [{"path": str(p.relative_to(self.workspace)), "exists": p.is_dir()} for p in paths]
         ok = all(item["exists"] for item in evidence)
         self._set("local-skills", VERIFIED if ok else BLOCKED, "ACTIVE" if ok else BLOCKED, evidence=evidence, error=None if ok else "local skill, agent or command directory is missing")
+
+    def _external_skills(self) -> None:
+        installs = (
+            (
+                "task-observer",
+                ["npx", "skills", "add", "rebelytics/one-skill-to-rule-them-all", "--skill", "task-observer", "--copy", "--agent", "claude-code", "--agent", "codex", "--yes"],
+                ("task-observer",),
+            ),
+            (
+                "emil",
+                ["npx", "skills", "add", "emilkowalski/skills", "--skill", "*", "--copy", "--agent", "claude-code", "--agent", "codex", "--yes"],
+                ("emil-design-eng",),
+            ),
+            (
+                "taste",
+                ["npx", "skills", "add", "tyfarrago-hub/taste", "--skill", "*", "--copy", "--agent", "claude-code", "--agent", "codex", "--yes"],
+                ("design-taste-frontend",),
+            ),
+        )
+        if not self.runner.which("npx"):
+            for name, _, _ in installs:
+                self._set(name, BLOCKED, "BLOCKED", evidence=[{"required": "npx"}], error="npx is required for the external skill installer")
+            self._set("impeccable", BLOCKED, "BLOCKED", evidence=[{"required": "npx"}], error="npx is required for the external skill installer")
+            return
+
+        for name, argv, markers in installs:
+            evidence: list[Any] = []
+            install = self._run(name, argv, cwd=self.workspace, timeout=900)
+            evidence.append({"command": argv, "ok": install.ok, "returncode": install.returncode})
+            listing = self._run(name, ["npx", "skills", "list"], cwd=self.workspace, timeout=180)
+            listing_text = (listing.stdout + listing.stderr).lower()
+            discovered = listing.ok and all(marker in listing_text for marker in markers)
+            evidence.append({
+                "command": listing.argv,
+                "ok": listing.ok,
+                "discovered": discovered,
+                "markers": list(markers),
+            })
+            activation_contract = False
+            if name == "task-observer":
+                contract = self.workspace / ("CLAUDE.md" if self.host["claude"] else "AGENTS.md")
+                try:
+                    activation_contract = "task observer" in contract.read_text(encoding="utf-8").lower()
+                except OSError:
+                    activation_contract = False
+                observer_workspace = self.workspace / "task-observer-workspace"
+                try:
+                    observer_workspace.mkdir(parents=True, exist_ok=True)
+                    observer_workspace_ready = observer_workspace.is_dir()
+                except OSError:
+                    observer_workspace_ready = False
+                evidence.append({
+                    "activation_contract": activation_contract,
+                    "isolated_workspace": str(observer_workspace),
+                    "isolated_workspace_ready": observer_workspace_ready,
+                })
+            else:
+                observer_workspace_ready = True
+
+            ok = install.ok and discovered and activation_contract is not False and observer_workspace_ready
+            self._set(
+                name,
+                VERIFIED if ok else BLOCKED,
+                "VERIFIED" if ok else "BLOCKED",
+                evidence=evidence,
+                error=None if ok else f"{name} was not installed and discovered for the detected agent host",
+            )
+
+        impeccable_install = ["npx", "impeccable", "install", "-y", "--providers=claude,codex", "--scope=project"]
+        impeccable = self._run("impeccable", impeccable_install, cwd=self.workspace, timeout=900)
+        help_result = self._run("impeccable", ["npx", "impeccable", "help"], cwd=self.workspace, timeout=180)
+        evidence = [
+            {"command": impeccable_install, "ok": impeccable.ok, "returncode": impeccable.returncode},
+            {"command": help_result.argv, "ok": help_result.ok, "discovered": "impeccable" in (help_result.stdout + help_result.stderr).lower()},
+        ]
+        ok = impeccable.ok and help_result.ok and evidence[-1]["discovered"]
+        self._set(
+            "impeccable",
+            VERIFIED if ok else BLOCKED,
+            "VERIFIED" if ok else "BLOCKED",
+            evidence=evidence,
+            error=None if ok else "Impeccable was not installed and discovered",
+        )
 
     def _headroom(self) -> None:
         evidence: list[Any] = []
