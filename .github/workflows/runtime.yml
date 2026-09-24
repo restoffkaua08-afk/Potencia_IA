@@ -1,0 +1,21 @@
+name: Validate Potencia Runtime
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Compile
+        run: python -m compileall -q potencia_runtime
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
