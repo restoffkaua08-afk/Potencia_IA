@@ -131,8 +131,10 @@ class RuntimeServer:
                     self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
                     return
                 try:
+                    if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
+                        raise ValueError("content type must be application/json")
                     length = int(self.headers.get("Content-Length", "0"))
-                    if length < 0 or length > 1_000_000:
+                    if length <= 0 or length > 1_000_000:
                         raise ValueError("invalid content length")
                     body = json.loads(self.rfile.read(length) or b"{}")
                     if not isinstance(body, dict):
