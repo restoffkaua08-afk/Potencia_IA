@@ -256,7 +256,7 @@ git clone https://github.com/restoffkaua08-afk/Potencia_IA.git
 cd Potencia_IA
 ```
 
-No Claude Code, execute o bootstrap real na raiz do projeto: python -m potencia_runtime bootstrap --workspace .. O contrato em CLAUDE.md conduz a instalação, configuração e verificação. O comando só retorna sucesso quando o Final Gate é VERIFIED.
+No Claude Code, execute o bootstrap real na raiz do projeto: python -m potencia_runtime bootstrap --workspace . O contrato em CLAUDE.md conduz a instalação, configuração e verificação. O comando só retorna sucesso quando o Final Gate é VERIFIED.
 
 #### Codex
 
