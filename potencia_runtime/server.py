@@ -107,7 +107,7 @@ class RuntimeServer:
                         server.clients.append(self)
                     try:
                         payload = json.dumps(server.state.snapshot(), ensure_ascii=False)
-                        self.wfile.write(f"event: snapshot\\ndata: {payload}\\n\\n".encode("utf-8"))
+                        self.wfile.write(f"event: snapshot\ndata: {payload}\n\n".encode("utf-8"))
                         self.wfile.flush()
                         while True:
                             time.sleep(15)
@@ -201,7 +201,7 @@ class RuntimeServer:
         return None
 
     def broadcast(self, event: dict[str, Any]) -> None:
-        raw = f"event: {event['type']}\\ndata: {json.dumps(event, ensure_ascii=False)}\\n\\n".encode("utf-8")
+        raw = f"event: {event['type']}\ndata: {json.dumps(event, ensure_ascii=False)}\n\n".encode("utf-8")
         with self.clients_lock:
             clients = list(self.clients)
         dead = []
