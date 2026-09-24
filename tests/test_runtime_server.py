@@ -163,6 +163,20 @@ class RuntimeServerTests(unittest.TestCase):
                 server.shutdown()
                 thread.join(timeout=2)
 
+    def test_sse_shutdown_interrupts_heartbeat_wait(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            server = RuntimeServer(Path(tmp), port=0)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                server.stop_event.set()
+                server.shutdown()
+                thread.join(timeout=2)
+                self.assertFalse(thread.is_alive())
+            finally:
+                if thread.is_alive():
+                    server.shutdown()
+
     def test_sse_starts_with_snapshot_frame(self):
         with tempfile.TemporaryDirectory() as tmp:
             server = RuntimeServer(Path(tmp), port=0)
