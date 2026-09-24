@@ -22,6 +22,10 @@ class FakeRunner:
             stdout = "codex-subagent stdio"
         if argv == ["codex", "plugin", "list"]:
             stdout = "superpowers"
+        if argv == ["npx", "skills", "list"]:
+            stdout = "task-observer emil-design-eng design-taste-frontend impeccable"
+        if argv == ["npx", "impeccable", "help"]:
+            stdout = "impeccable help"
         return CommandResult(list(argv), 0, stdout=stdout)
 
     def spawn(self, argv, *, cwd, log_path):
@@ -97,7 +101,7 @@ class BootstrapTests(unittest.TestCase):
             root.mkdir()
             make_workspace(root)
             make_claude_registry(home)
-            runner = FakeRunner({"claude", "uv", "headroom", "omniroute", "rtk", "graphify", "shux"})
+            runner = FakeRunner({"claude", "uv", "npx", "headroom", "omniroute", "rtk", "graphify", "shux"})
             checker = lambda url, **kwargs: (True, {"data": [{"id": "auto"}]})
 
             state = BootstrapRunner(
@@ -108,7 +112,7 @@ class BootstrapTests(unittest.TestCase):
                 home=home,
             ).bootstrap()
 
-            for name in ("superpowers", "vv-harness", "security-hooks", "superharness", "codex-subagents"):
+            for name in ("task-observer", "emil", "impeccable", "taste", "superpowers", "vv-harness", "security-hooks", "superharness", "codex-subagents"):
                 self.assertEqual(state["components"][name]["status"], "VERIFIED", name)
             self.assertEqual(state["final_gate"]["status"], "VERIFIED")
             mcp_commands = [entry["argv"] for entry in state["components"]["codex-subagents"]["commands"]]
@@ -118,12 +122,13 @@ class BootstrapTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             make_workspace(root)
-            runner = FakeRunner({"codex", "headroom", "omniroute", "rtk", "graphify", "shux"})
+            runner = FakeRunner({"codex", "npx", "headroom", "omniroute", "rtk", "graphify", "shux"})
             checker = lambda url, **kwargs: (True, {"data": [{"id": "auto"}]})
 
             state = BootstrapRunner(root, runner=runner, checker=checker, sleep=lambda _: None).bootstrap()
 
-            self.assertEqual(state["components"]["superpowers"]["status"], "VERIFIED")
+            for name in ("task-observer", "emil", "impeccable", "taste", "superpowers"):
+                self.assertEqual(state["components"][name]["status"], "VERIFIED", name)
             for name in ("vv-harness", "security-hooks", "codex-subagents"):
                 self.assertEqual(state["components"][name]["status"], "BLOCKED", name)
             self.assertEqual(state["final_gate"]["status"], "BLOCKED")
