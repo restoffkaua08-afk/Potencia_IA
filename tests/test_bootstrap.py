@@ -41,8 +41,8 @@ def make_workspace(root):
         "plugins": ["omni-route", "headroom"],
     }
     for path, content in (
-        ("CLAUDE.md", "fixture"),
-        ("AGENTS.md", "fixture"),
+        ("CLAUDE.md", "Task Observer activation contract fixture"),
+        ("AGENTS.md", "Task Observer activation contract fixture"),
         ("MANIFEST.json", json.dumps(manifest)),
         ("bootstrap/BOOTSTRAP.md", "fixture"),
         ("bootstrap/AGENT-POLICY.md", "fixture"),
