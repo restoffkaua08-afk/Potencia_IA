@@ -309,9 +309,10 @@ class BootstrapRunner:
                     "isolated_workspace_ready": observer_workspace_ready,
                 })
             else:
+                activation_contract = True
                 observer_workspace_ready = True
 
-            ok = install.ok and discovered and activation_contract is not False and observer_workspace_ready
+            ok = install.ok and discovered and activation_contract and observer_workspace_ready
             self._set(
                 name,
                 VERIFIED if ok else BLOCKED,
